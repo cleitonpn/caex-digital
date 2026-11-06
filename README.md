@@ -1,0 +1,97 @@
+# CAEX Digital
+
+Plataforma web responsiva para centralizar a operação de montagem, evento e desmontagem de feiras. O primeiro marco funciona inteiramente em modo demonstração local e não exige um projeto Firebase.
+
+## Executar localmente
+
+Requisitos: Node.js 24+ e Java 21+ para os emuladores.
+
+```bash
+npm install
+npm run dev
+```
+
+Abra o endereço exibido pelo Vite. A aplicação inicia com dados fictícios persistidos no `localStorage`. Use **Configurações → Restaurar demonstração** para recuperar o estado inicial.
+
+Rotas principais:
+
+- `#/`: Sala de Guerra
+- `#/chamados`: gestão e ciclo dos chamados
+- `#/expositores`: stands, documentos e classificação interna
+- `#/fornecedores`: fornecedores e matriz de responsabilidade
+- `#/equipes`: produtores, atendimentos e cobertura de ausência
+- `#/importar`: importação em lote por CSV
+- `#/configuracoes`: períodos operacionais e SLA
+- `#/portal`: portal white label do expositor
+
+## Firebase local
+
+O frontend não depende do Firebase para o modo demonstração. Para desenvolver autenticação, Firestore, Storage e Cloud Functions com serviços locais:
+
+```bash
+cp .env.example .env.local
+npm run emulators:fresh
+```
+
+Em outro terminal, mantenha `npm run dev` ativo. O projeto local usado pelos emuladores é `caex-digital-local`; não é preciso criar esse projeto no console do Firebase.
+
+As Functions incluem a API autenticada de importação em lote, geração de notificações no aplicativo e uma fila de entrega preparada para Resend e WhatsApp Cloud API. As credenciais externas não são necessárias no desenvolvimento local; sem elas, a fila registra `configuration_required` sem tentar um envio real.
+
+Para validar API, trigger do Firestore e fila de notificações de uma só vez:
+
+```bash
+npm run emulators:smoke
+```
+
+Quando um projeto real for criado, preencha as variáveis `VITE_FIREBASE_*` em `.env.local`. O módulo `src/services/firebase.ts` conecta automaticamente aos emuladores no desenvolvimento quando `VITE_USE_FIREBASE_EMULATORS=true`.
+
+## Regras já implementadas
+
+- Períodos independentes de montagem, evento e desmontagem, com data e hora.
+- Intervalos sem fase operacional ativa e validação de sobreposição.
+- Matriz de responsabilidade por expositor, categoria e fase.
+- Limpeza da montagem atribuída à montadora.
+- Limpeza do evento atribuída ao fornecedor contratado e bloqueada para o expositor sem contratação.
+- Categorias: marcenaria, elétrica, tapeçaria, comunicação visual, limpeza, mobiliário, paisagismo, áudio e vídeo e A/B.
+- Prioridade por segurança, impacto, fase, proximidade da abertura, espera, reabertura e classificação interna.
+- Categoria informada preservada separadamente da causa real encontrada.
+- SLA de aceite, resolução e escalonamento por prioridade.
+- Cobertura por produtor secundário quando o principal está ausente.
+- Portal white label em português, inglês e espanhol, com preferência de idioma persistida no navegador.
+
+## API de importação
+
+`POST /importExhibitors` aceita no máximo 500 expositores por requisição. O cabeçalho deve conter um Firebase ID token (`Authorization: Bearer ...`) e o usuário precisa ser membro ativo da organizadora com função `platform_admin`, `organizer_admin` ou `event_manager`.
+
+O corpo segue este formato:
+
+```json
+{
+  "tenantId": "organizadora-id",
+  "eventId": "evento-id",
+  "exhibitors": [
+    {
+      "externalId": "cliente-123",
+      "name": "Empresa Expositora",
+      "contactName": "Nome do responsável",
+      "contactEmail": "responsavel@empresa.com",
+      "stand": "B124",
+      "pavilion": "Pavilhão 2",
+      "areaSqm": 48,
+      "internalTier": "AAA",
+      "projectUrl": "https://drive.google.com/...",
+      "memorialUrl": "https://drive.google.com/..."
+    }
+  ]
+}
+```
+
+## Verificação
+
+```bash
+npm test
+npm run build:all
+npm run emulators:smoke
+```
+
+Os dados da demonstração são fictícios. Nenhum dado do Firestore de produção do aplicativo anterior é utilizado neste marco.

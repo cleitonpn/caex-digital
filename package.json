@@ -1,0 +1,42 @@
+{
+  "name": "caex-digital",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:all": "npm run build && npm --prefix functions run build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "emulators": "firebase emulators:start --only auth,firestore,storage,functions --project caex-digital-local --import=.firebase-data --export-on-exit=.firebase-data",
+    "emulators:fresh": "firebase emulators:start --only auth,firestore,storage,functions --project caex-digital-local",
+    "emulators:smoke": "firebase emulators:exec --only firestore,functions --project caex-digital-local \"node functions/scripts/emulator-smoke.mjs\"",
+    "functions:install": "npm --prefix functions install",
+    "functions:build": "npm --prefix functions run build",
+    "deploy:preview": "npm run build"
+  },
+  "dependencies": {
+    "date-fns": "^4.4.0",
+    "firebase": "^13.2.0",
+    "i18next": "^26.7.2",
+    "lucide-react": "^1.70.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-i18next": "^17.1.13",
+    "react-router-dom": "^7.18.5",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "firebase-tools": "14.27.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.1.0"
+  }
+}
