@@ -98,7 +98,7 @@ export function AppLayout() {
             <input aria-label="Buscar" placeholder="Buscar chamados, stands, expositores..." />
           </label>
           <NavLink to="/notificacoes" className={({ isActive }) => `icon-button notification-button${isActive ? ' active' : ''}`} aria-label="Notificações"><Bell /><span /></NavLink>
-          <Avatar initials="AR" color="#5f50d5" />
+          <button className="topbar-profile-button" onClick={() => navigate('/perfis')} aria-label="Trocar perfil"><Avatar initials="AR" color="#5f50d5" /></button>
         </header>
         <div className={`page-content page-${location.pathname.replace('/', '') || 'home'}`}>
           <Outlet />

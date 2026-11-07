@@ -15,6 +15,8 @@ Abra o endereço exibido pelo Vite. A aplicação inicia com dados fictícios pe
 
 Rotas principais:
 
+- `#/entrar`: entrada white label
+- `#/perfis`: seletor de perfis da demonstração
 - `#/`: Sala de Guerra
 - `#/chamados`: gestão e ciclo dos chamados
 - `#/eventos`: portfólio, preparação e histórico de eventos
@@ -27,6 +29,15 @@ Rotas principais:
 - `#/importar`: importação em lote por CSV
 - `#/configuracoes`: períodos operacionais e SLA
 - `#/portal`: portal white label do expositor
+- `#/gestor`: painel executivo do gestor da feira
+- `#/organizador/producao`: operação em campo da organizadora
+- `#/organizador/atendimento`: central de atendimento da organizadora
+- `#/fornecedor`: administração da empresa fornecedora
+- `#/fornecedor/atendimento`: coordenação de chamados do fornecedor
+- `#/fornecedor/producao`: fila de campo do produtor do fornecedor
+- `#/admin-plataforma`: administração multi-tenant do CAEXOne
+
+O mapeamento completo entre papéis, telas e capacidades está em [`docs/SCREEN_INVENTORY.md`](docs/SCREEN_INVENTORY.md).
 
 ## Firebase local
 
