@@ -5,13 +5,16 @@ import {
   Clock3,
   Mail,
   MessageCircle,
+  Save,
   Settings2,
+  SlidersHorizontal,
   ShieldAlert,
   Smartphone,
   TicketCheck,
   TriangleAlert,
+  X,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/ui';
 import { categoryById } from '../domain/catalog';
@@ -40,6 +43,19 @@ export function NotificationsPage() {
   const [filter, setFilter] = useState<NotificationFilter>('all');
   const [read, setRead] = useState<Set<string>>(new Set(['notification-5', 'notification-6', 'notification-7']));
   const [channels, setChannels] = useState({ app: true, email: true, whatsapp: false, escalations: true, daily: true });
+  const [showRules, setShowRules] = useState(false);
+  const [rules, setRules] = useState({ criticalImmediate: true, slaWarningMinutes: 15, managerEscalationMinutes: 180, dailySummary: true, dailySummaryTime: '08:00' });
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('caex-notification-preferences');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.channels) setChannels(parsed.channels);
+        if (parsed.rules) setRules(parsed.rules);
+      }
+    } catch { /* preferências inválidas usam os padrões */ }
+  }, []);
+  useEffect(() => { localStorage.setItem('caex-notification-preferences', JSON.stringify({ channels, rules })); }, [channels, rules]);
 
   const notifications = useMemo<NotificationItem[]>(() => {
     const active = app.tickets.filter((ticket) => !['resolved', 'closed_not_performed'].includes(ticket.status));
@@ -74,7 +90,7 @@ export function NotificationsPage() {
       eyebrow="Central de alertas"
       title="Notificações"
       description="Acompanhe chamados, prazos, mensagens e mudanças importantes da operação."
-      actions={<button className="button button-ghost" onClick={markAllRead}><CheckCheck /> Marcar todas como lidas</button>}
+      actions={<><button className="button button-ghost" onClick={markAllRead}><CheckCheck /> Marcar todas como lidas</button><button className="button button-primary" onClick={() => setShowRules(true)}><SlidersHorizontal /> Configurar alertas</button></>}
     />
 
     <section className="notifications-layout">
@@ -107,9 +123,10 @@ export function NotificationsPage() {
             <ChannelToggle icon={Smartphone} label="WhatsApp" description="Somente escalonamentos" checked={channels.whatsapp} onChange={() => setChannels((current) => ({ ...current, whatsapp: !current.whatsapp }))} />
           </div>
         </section>
-        <section className="panel alert-rules-card"><div><ShieldAlert /><span><strong>Regras de escalonamento</strong><small>Configuradas para esta feira</small></span></div><p><TriangleAlert /> Prioridades críticas avisam gestores imediatamente.</p><p><Clock3 /> Após 3 horas vencidas, o gestor do fornecedor é acionado.</p><button className="button button-ghost full-button" onClick={() => navigate('/configuracoes')}>Ver regras e SLA</button></section>
+        <section className="panel alert-rules-card"><div><ShieldAlert /><span><strong>Regras de escalonamento</strong><small>Configuradas para esta feira</small></span></div><p><TriangleAlert /> Prioridades críticas {rules.criticalImmediate ? 'avisam gestores imediatamente' : 'seguem o SLA padrão'}.</p><p><Clock3 /> Após {rules.managerEscalationMinutes / 60}h vencidas, o gestor do fornecedor é acionado.</p><button className="button button-ghost full-button" onClick={() => setShowRules(true)}>Editar regras de aviso</button></section>
       </aside>
     </section>
+    {showRules && <div className="modal-backdrop" onMouseDown={() => setShowRules(false)}><section className="modal-card notification-rules-modal" onMouseDown={(event) => event.stopPropagation()}><header><div><span className="modal-heading-icon"><SlidersHorizontal /></span><span><h2>Regras de notificação</h2><p>Defina quando e por quais canais a operação será avisada.</p></span></div><button className="icon-button" onClick={() => setShowRules(false)}><X /></button></header><div className="notification-rules-body"><label className="rule-switch"><span><strong>Críticos imediatamente</strong><small>Avisa atendimentos e gestores assim que o chamado for calculado como crítico.</small></span><input type="checkbox" checked={rules.criticalImmediate} onChange={(event) => setRules((current) => ({ ...current, criticalImmediate: event.target.checked }))} /></label><label className="form-field"><span>Avisar antes do SLA vencer</span><div className="number-unit"><input type="number" min="5" value={rules.slaWarningMinutes} onChange={(event) => setRules((current) => ({ ...current, slaWarningMinutes: Number(event.target.value) }))} /><b>minutos</b></div></label><label className="form-field"><span>Escalar para gestores após vencimento</span><div className="number-unit"><input type="number" min="30" step="30" value={rules.managerEscalationMinutes} onChange={(event) => setRules((current) => ({ ...current, managerEscalationMinutes: Number(event.target.value) }))} /><b>minutos</b></div></label><label className="rule-switch"><span><strong>Resumo diário</strong><small>Consolida chamados, SLA e pendências para gestores.</small></span><input type="checkbox" checked={rules.dailySummary} onChange={(event) => setRules((current) => ({ ...current, dailySummary: event.target.checked }))} /></label>{rules.dailySummary && <label className="form-field"><span>Horário do resumo</span><input type="time" value={rules.dailySummaryTime} onChange={(event) => setRules((current) => ({ ...current, dailySummaryTime: event.target.value }))} /></label>}<div className="notification-channel-summary"><BellRing /><span><strong>Canais ativos</strong><small>{[channels.app && 'Aplicativo', channels.email && 'E-mail', channels.whatsapp && 'WhatsApp'].filter(Boolean).join(' · ') || 'Nenhum canal selecionado'}</small></span></div></div><footer><button className="button button-ghost" onClick={() => navigate('/configuracoes')}>Ver SLA</button><button className="button button-primary" onClick={() => setShowRules(false)}><Save /> Salvar regras</button></footer></section></div>}
   </>;
 }
 

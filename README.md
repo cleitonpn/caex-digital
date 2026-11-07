@@ -60,6 +60,22 @@ npm run emulators:smoke
 
 Quando um projeto real for criado, preencha as variáveis `VITE_FIREBASE_*` em `.env.local`. O módulo `src/services/firebase.ts` conecta automaticamente aos emuladores no desenvolvimento quando `VITE_USE_FIREBASE_EMULATORS=true`.
 
+## Publicação no Firebase
+
+O workflow [`.github/workflows/firebase.yml`](.github/workflows/firebase.yml) valida o projeto e publica regras, índices, Storage e as Functions prontas sempre que o backend muda na branch `main`. Ele usa o secret de repositório `FIREBASE_SERVICE_ACCOUNT`, que aceita tanto o JSON original da conta de serviço quanto esse JSON codificado em base64.
+
+Para o GitHub Pages usar autenticação real, cadastre estas **Actions variables** no repositório:
+
+- `VITE_DATA_MODE=firebase`
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`
+
+Sem essas variáveis, a publicação continua funcionando no modo demonstração. As notificações externas ficam na fila até que `RESEND_API_KEY`, `WHATSAPP_ACCESS_TOKEN` e `WHATSAPP_PHONE_NUMBER_ID` sejam cadastrados como secrets do Firebase; as notificações dentro do aplicativo continuam disponíveis.
+
 ## Regras já implementadas
 
 - Períodos independentes de montagem, evento e desmontagem, com data e hora.
@@ -77,6 +93,8 @@ Quando um projeto real for criado, preencha as variáveis `VITE_FIREBASE_*` em `
 - Relatórios executivos com SLA, tempos médios, categorias e score de fornecedores.
 - Administração de usuários com escopo por organizadora, fornecedor ou expositor.
 - Central de notificações com alertas críticos e preferências para aplicativo, e-mail e WhatsApp.
+- Cadastro de fornecedores, contatos, especialidades, equipe e cobertura de plantão.
+- QR Code real para acesso direto ao portal white label de cada expositor.
 - Abertura de chamados pela organizadora com roteamento, impacto, segurança e evidências.
 - Ficha completa do expositor com edição, documentos, chamados e responsabilidades.
 - Editor da matriz por montagem, evento e desmontagem, incluindo contratação e equipe responsável.

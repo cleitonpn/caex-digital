@@ -14,9 +14,11 @@ import type {
   Event,
   Exhibitor,
   FurnitureItem,
+  Company,
   ImportRow,
   OperationalPhase,
   OperationalWindow,
+  Person,
   ServiceAssignment,
   ServiceCategoryId,
   SlaPolicy,
@@ -70,6 +72,24 @@ export interface ResponsibilityInput {
   providerServiceId?: string;
 }
 
+export interface ProviderInput {
+  name: string;
+  specialties: ServiceCategoryId[];
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+}
+
+export interface PersonInput {
+  companyId: string;
+  name: string;
+  role: UserRole;
+  title: string;
+  email: string;
+  phone?: string;
+  avatarColor?: string;
+}
+
 interface AppContextValue extends DemoState {
   phase: ReturnType<typeof activePhase>;
   createTicket(input: CreateTicketInput): { ticket?: Ticket; error?: string };
@@ -82,6 +102,11 @@ interface AppContextValue extends DemoState {
   addExhibitor(input: ExhibitorInput): Exhibitor;
   updateExhibitor(exhibitorId: string, input: ExhibitorInput): void;
   replaceResponsibilities(exhibitorId: string, phase: OperationalPhase, inputs: ResponsibilityInput[]): void;
+  addProvider(input: ProviderInput): Company;
+  updateProvider(providerId: string, input: ProviderInput): void;
+  addPerson(input: PersonInput): Person;
+  updatePerson(personId: string, patch: Partial<Person>): void;
+  setProviderCoverage(providerId: string, primaryProducerId: string, secondaryProducerId?: string, providerServiceId?: string): void;
   updateEvent(event: Event): void;
   updateWindows(windows: OperationalWindow[]): void;
   updateSlaPolicies(policies: SlaPolicy[]): void;
@@ -324,6 +349,30 @@ export function AppProvider({ children }: PropsWithChildren) {
           }));
           return { ...current, assignments: [...retained, ...replacements] };
         });
+      },
+      addProvider(input) {
+        const id = `${input.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
+        const company: Company = { id, tenantId: state.event.tenantId, type: 'provider', ...input };
+        persist((current) => ({ ...current, companies: [...current.companies, company] }));
+        return company;
+      },
+      updateProvider(providerId, input) {
+        persist((current) => ({ ...current, companies: current.companies.map((company) => company.id === providerId ? { ...company, ...input } : company) }));
+      },
+      addPerson(input) {
+        const initials = input.name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+        const person = { id: `person-${Date.now()}`, initials, avatarColor: input.avatarColor ?? '#5f50d5', active: true, available: false, ...input };
+        persist((current) => ({ ...current, people: [...current.people, person] }));
+        return person;
+      },
+      updatePerson(personId, patch) {
+        persist((current) => ({ ...current, people: current.people.map((person) => person.id === personId ? { ...person, ...patch } : person) }));
+      },
+      setProviderCoverage(providerId, primaryProducerId, secondaryProducerId, providerServiceId) {
+        persist((current) => ({
+          ...current,
+          assignments: current.assignments.map((assignment) => assignment.providerId === providerId ? { ...assignment, primaryProducerId, secondaryProducerId, providerServiceId } : assignment),
+        }));
       },
       updateEvent(event) {
         persist((current) => ({ ...current, event }));

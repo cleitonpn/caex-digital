@@ -1,0 +1,41 @@
+name: Publicar backend no Firebase
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'functions/**'
+      - 'firestore.rules'
+      - 'firestore.indexes.json'
+      - 'storage.rules'
+      - 'firebase.json'
+      - '.github/workflows/firebase.yml'
+      - '.github/scripts/prepare-firebase-credentials.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-backend
+  cancel-in-progress: false
+
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm --prefix functions ci
+      - run: npm test
+      - run: npm run build:all
+      - name: Preparar credenciais do Firebase
+        run: node .github/scripts/prepare-firebase-credentials.mjs
+      - name: Publicar regras, índices, Storage e Functions prontas
+        run: npx firebase-tools deploy --only firestore,storage,functions:health,functions:importExhibitors,functions:createTicketNotifications --project "$FIREBASE_PROJECT_ID" --non-interactive

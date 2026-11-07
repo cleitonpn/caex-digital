@@ -2,10 +2,42 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
-    match /tenants/{tenantId}/{allPaths=**} {
-      allow read, write: if request.auth != null
-        && firestore.get(/databases/(default)/documents/tenants/$(tenantId)/members/$(request.auth.uid)).data.active == true;
+    function memberPath(tenantId) {
+      return /databases/(default)/documents/tenants/$(tenantId)/members/$(request.auth.uid);
     }
+    function isMember(tenantId) {
+      return request.auth != null && firestore.exists(memberPath(tenantId)) && firestore.get(memberPath(tenantId)).data.active == true;
+    }
+    function member(tenantId) { return firestore.get(memberPath(tenantId)).data; }
+    function isAdmin(tenantId) {
+      return isMember(tenantId) && member(tenantId).role in ['platform_admin', 'organizer_admin', 'event_manager'];
+    }
+    function validOperationalFile() {
+      return request.resource.size < 20 * 1024 * 1024 &&
+        request.resource.contentType.matches('(image/.*|application/pdf|application/dwg|application/octet-stream)');
+    }
+
+    match /tenants/{tenantId}/events/{eventId}/tickets/{ticketId}/{fileName} {
+      allow read: if isMember(tenantId);
+      allow write: if isMember(tenantId) && validOperationalFile();
+    }
+
+    match /tenants/{tenantId}/events/{eventId}/exhibitors/{exhibitorId}/{allPaths=**} {
+      allow read: if isMember(tenantId);
+      allow write: if isAdmin(tenantId) ||
+        (isMember(tenantId) && member(tenantId).exhibitorId == exhibitorId && validOperationalFile());
+    }
+
+    match /tenants/{tenantId}/avatars/{personId} {
+      allow read: if isMember(tenantId);
+      allow write: if isMember(tenantId) && (request.auth.uid == personId || isAdmin(tenantId)) && validOperationalFile();
+    }
+
+    match /tenants/{tenantId}/{allPaths=**} {
+      allow read: if isMember(tenantId);
+      allow write: if isAdmin(tenantId) && validOperationalFile();
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }

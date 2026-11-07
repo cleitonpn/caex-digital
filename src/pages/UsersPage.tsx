@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { type FormEvent, useMemo, useState } from 'react';
 import { Avatar, PageHeader } from '../components/ui';
-import type { Person, UserRole } from '../domain/types';
+import type { UserRole } from '../domain/types';
 import { useApp } from '../state/AppContext';
 
 const roleLabels: Record<UserRole, string> = {
@@ -39,11 +39,10 @@ const roleGroups = {
 
 export function UsersPage() {
   const app = useApp();
-  const [users, setUsers] = useState<Person[]>(app.people);
+  const users = app.people;
   const [search, setSearch] = useState('');
   const [companyFilter, setCompanyFilter] = useState('all');
   const [roleFilter, setRoleFilter] = useState('all');
-  const [disabledUsers, setDisabledUsers] = useState<Set<string>>(new Set());
   const [showInvite, setShowInvite] = useState(false);
   const [inviteSent, setInviteSent] = useState('');
 
@@ -59,31 +58,25 @@ export function UsersPage() {
     const form = new FormData(event.currentTarget);
     const name = String(form.get('name') ?? 'Novo usuário');
     const role = String(form.get('role') ?? 'organizer_service') as UserRole;
-    const newUser: Person = {
-      id: `person-${Date.now()}`,
+    const newUser = app.addPerson({
       companyId: String(form.get('companyId') ?? app.event.tenantId),
       name,
       role,
       title: roleLabels[role],
-      initials: name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase(),
-      avatarColor: '#5f50d5',
       email: String(form.get('email') ?? ''),
-      active: true,
-      available: false,
-    };
-    setUsers((current) => [newUser, ...current]);
+      phone: String(form.get('phone') ?? '') || undefined,
+    });
     setInviteSent(newUser.email);
     setShowInvite(false);
     window.setTimeout(() => setInviteSent(''), 4000);
   };
 
-  const toggleUser = (id: string) => setDisabledUsers((current) => {
-    const next = new Set(current);
-    if (next.has(id)) next.delete(id); else next.add(id);
-    return next;
-  });
+  const toggleUser = (id: string) => {
+    const user = app.people.find((person) => person.id === id);
+    if (user) app.updatePerson(id, { active: !user.active });
+  };
 
-  const activeCount = users.filter((user) => !disabledUsers.has(user.id)).length;
+  const activeCount = users.filter((user) => user.active).length;
   const organizerCount = users.filter((user) => roleGroups.organizer.includes(user.role)).length;
   const providerCount = users.filter((user) => roleGroups.provider.includes(user.role)).length;
 
@@ -114,7 +107,7 @@ export function UsersPage() {
     <section className="panel users-panel">
       <div className="users-table-wrap"><table className="data-table users-table"><thead><tr><th>Usuário</th><th>Empresa</th><th>Função</th><th>Escopo de acesso</th><th>Última atividade</th><th>Status</th><th /></tr></thead><tbody>{filtered.map((user, index) => {
         const company = app.companies.find((item) => item.id === user.companyId);
-        const disabled = disabledUsers.has(user.id);
+        const disabled = !user.active;
         return <tr key={user.id} className={disabled ? 'user-disabled' : undefined}>
           <td><div className="user-identity"><Avatar initials={user.initials} color={user.avatarColor} /><span><strong>{user.name}</strong><small>{user.email}</small></span></div></td>
           <td><strong>{company?.name ?? 'Expositor'}</strong><small>{company?.type === 'organizer' ? 'Organizadora' : 'Fornecedor parceiro'}</small></td>
@@ -144,6 +137,7 @@ export function UsersPage() {
       <div className="modal-form-grid">
         <label className="form-field full-span"><span>Nome completo</span><input name="name" required placeholder="Nome e sobrenome" /></label>
         <label className="form-field full-span"><span>E-mail profissional</span><input name="email" type="email" required placeholder="nome@empresa.com" /></label>
+        <label className="form-field full-span"><span>WhatsApp</span><input name="phone" type="tel" placeholder="+55 11 99999-9999" /></label>
         <label className="form-field"><span>Empresa</span><select name="companyId" defaultValue={app.event.tenantId}>{app.companies.filter((company) => company.type !== 'exhibitor').map((company) => <option value={company.id} key={company.id}>{company.name}</option>)}</select></label>
         <label className="form-field"><span>Perfil de acesso</span><select name="role" defaultValue="organizer_service">{Object.entries(roleLabels).filter(([role]) => role !== 'platform_admin').map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
       </div>

@@ -80,6 +80,9 @@ export interface Company {
   name: string;
   type: CompanyType;
   specialties?: ServiceCategoryId[];
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
 }
 
 export interface Exhibitor {

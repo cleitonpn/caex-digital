@@ -1,6 +1,7 @@
-import { AlertTriangle, ArrowLeft, Bell, CheckCircle2, ChevronRight, Clock3, FileText, FolderOpen, Globe2, Headphones, ImagePlus, MessageCircle, Plus, ShieldCheck, UsersRound, Zap } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { AlertTriangle, Armchair, ArrowLeft, Bell, CheckCircle2, ChevronRight, Clock3, Download, FileText, FolderOpen, Globe2, Headphones, ImagePlus, MessageCircle, Plus, QrCode, ShieldCheck, UsersRound, X, Zap } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import QRCode from 'qrcode';
 import { serviceCategories } from '../domain/catalog';
 import { availableCategories, resolveServiceAssignment } from '../domain/routing';
 import type { Priority, ServiceCategoryId, Ticket, TicketStatus } from '../domain/types';
@@ -12,9 +13,11 @@ type PortalView = 'home' | 'new' | 'ticket';
 export function PortalPage() {
   const app = useApp();
   const { t, i18n } = useTranslation();
-  const exhibitor = app.exhibitors.find((item) => item.id === 'aurora-tech')!;
+  const requestedExhibitorId = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('exhibitor');
+  const exhibitor = app.exhibitors.find((item) => item.id === requestedExhibitorId) ?? app.exhibitors.find((item) => item.id === 'aurora-tech') ?? app.exhibitors[0];
   const [view, setView] = useState<PortalView>('home');
   const [selectedTicketId, setSelectedTicketId] = useState<string>('CH-7482');
+  const [qrOpen, setQrOpen] = useState(false);
   const ticket = app.tickets.find((item) => item.id === selectedTicketId);
   const language = i18n.resolvedLanguage?.split('-')[0] ?? 'pt';
 
@@ -32,9 +35,10 @@ export function PortalPage() {
         <button className="icon-button" aria-label="Notificações"><Bell /></button><Avatar initials="MA" color="#bb5267" />
       </div>
     </header>
-    {view === 'home' && <PortalHome exhibitor={exhibitor} onNew={() => setView('new')} onTicket={(id) => { setSelectedTicketId(id); setView('ticket'); }} />}
+    {view === 'home' && <PortalHome exhibitor={exhibitor} onNew={() => setView('new')} onTicket={(id) => { setSelectedTicketId(id); setView('ticket'); }} onQr={() => setQrOpen(true)} />}
     {view === 'new' && <NewPortalTicket exhibitorId={exhibitor.id} onBack={() => setView('home')} onCreated={(created) => { setSelectedTicketId(created.id); setView('ticket'); }} />}
     {view === 'ticket' && ticket && <PortalTicketDetail ticket={ticket} onBack={() => setView('home')} />}
+    <PortalQrModal open={qrOpen} exhibitor={exhibitor} onClose={() => setQrOpen(false)} />
   </main>;
 }
 
@@ -48,7 +52,7 @@ function PortalPriorityBadge({ priority }: { priority: Priority }) {
   return <span className={`badge priority-${priority}`}>{t(`priority.${priority}`)}</span>;
 }
 
-function PortalHome({ exhibitor, onNew, onTicket }: { exhibitor: ReturnType<typeof useApp>['exhibitors'][number]; onNew(): void; onTicket(id: string): void }) {
+function PortalHome({ exhibitor, onNew, onTicket, onQr }: { exhibitor: ReturnType<typeof useApp>['exhibitors'][number]; onNew(): void; onTicket(id: string): void; onQr(): void }) {
   const app = useApp();
   const { t } = useTranslation();
   const tickets = app.tickets.filter((ticket) => ticket.exhibitorId === exhibitor.id);
@@ -58,9 +62,22 @@ function PortalHome({ exhibitor, onNew, onTicket }: { exhibitor: ReturnType<type
     <section className="portal-stand-card"><div className="stand-visual"><span>{t('home.standPreparing')}</span><strong>{exhibitor.name}</strong></div><div><span><strong>{t('home.stand', { number: exhibitor.stand })}</strong><small>{exhibitor.pavilion} · {exhibitor.areaSqm} m²</small></span><ChevronRight /></div></section>
     <button className="portal-primary-action" onClick={onNew}><Plus /> {t('home.openTicket')}</button>
     <section className="portal-status-card"><div><h2>{t('home.ticketStatus')}</h2><button onClick={() => active[0] && onTicket(active[0].id)}>{t('home.inProgressCount', { count: active.length })} <ChevronRight /></button></div><div className="portal-status-numbers"><span><CheckCircle2 /><b>{tickets.filter((item) => item.status === 'resolved').length}</b><small>{t('home.resolved')}</small></span><span><Clock3 /><b>{active.filter((item) => item.status !== 'open').length}</b><small>{t('home.inService')}</small></span><span><Headphones /><b>{active.filter((item) => item.status === 'open').length}</b><small>{t('home.open')}</small></span></div></section>
-    <section className="portal-shortcuts"><button><FolderOpen /><span>{t('home.myProject')}</span></button><button><FileText /><span>{t('home.memorial')}</span></button><button><UsersRound /><span>{t('home.team')}</span></button></section>
+    <section className="portal-shortcuts four"><button><FolderOpen /><span>{t('home.myProject')}</span></button><button><FileText /><span>{t('home.memorial')}</span></button><button><UsersRound /><span>{t('home.team')}</span></button><button onClick={onQr}><QrCode /><span>{t('home.qrAccess')}</span></button></section>
+    <section className="portal-furniture-card"><div><span><Armchair /></span><div><h2>{t('home.furniture')}</h2><p>{t('home.furnitureTypes', { count: exhibitor.furniture?.length ?? 0 })}</p></div></div><div className="portal-furniture-list">{exhibitor.furniture?.map((item, index) => <span key={`${item.type}-${index}`}><b>{item.quantity}</b>{item.type}</span>)}</div></section>
     <section className="portal-recent"><div><h2>{t('home.recent')}</h2><button>{t('home.seeAll')}</button></div>{tickets.slice(0, 3).map((ticket) => <button className="portal-ticket-row" key={ticket.id} onClick={() => onTicket(ticket.id)}><span className="portal-ticket-icon"><Zap /></span><span><strong>{ticket.id} · {t(`category.${ticket.reportedCategory}`)}</strong><small>{ticket.description}</small></span><PortalStatusBadge status={ticket.status} /><ChevronRight /></button>)}</section>
   </div>;
+}
+
+function PortalQrModal({ open, exhibitor, onClose }: { open: boolean; exhibitor: ReturnType<typeof useApp>['exhibitors'][number]; onClose(): void }) {
+  const { t } = useTranslation();
+  const [image, setImage] = useState('');
+  useEffect(() => {
+    if (!open) return;
+    const url = `${window.location.origin}${window.location.pathname}#/portal?exhibitor=${encodeURIComponent(exhibitor.id)}`;
+    void QRCode.toDataURL(url, { width: 360, margin: 2, color: { dark: '#241873', light: '#ffffff' }, errorCorrectionLevel: 'H' }).then(setImage);
+  }, [open, exhibitor.id]);
+  if (!open) return null;
+  return <div className="portal-qr-backdrop" onMouseDown={onClose}><section className="portal-qr-modal" onMouseDown={(event) => event.stopPropagation()}><button className="icon-button" onClick={onClose}><X /></button><span className="portal-qr-event">{exhibitor.stand}</span><h2>{t('home.qrTitle')}</h2><p>{t('home.qrHelp')}</p>{image ? <img src={image} alt={t('home.qrAccess')} /> : <span className="portal-qr-loading" /> }<strong>{exhibitor.name} · {t('home.stand', { number: exhibitor.stand })}</strong><a className="portal-submit" href={image} download={`acesso-${exhibitor.stand}.png`}><Download /> {t('home.downloadQr')}</a></section></div>;
 }
 
 function NewPortalTicket({ exhibitorId, onBack, onCreated }: { exhibitorId: string; onBack(): void; onCreated(ticket: Ticket): void }) {

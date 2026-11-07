@@ -3,29 +3,95 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
-    function membership(tenantId) {
-      return get(/databases/$(database)/documents/tenants/$(tenantId)/members/$(request.auth.uid));
+    function memberPath(tenantId) {
+      return /databases/$(database)/documents/tenants/$(tenantId)/members/$(request.auth.uid);
     }
-    function belongsToTenant(tenantId) {
-      return signedIn() && membership(tenantId).data.active == true;
+    function isMember(tenantId) {
+      return signedIn() && exists(memberPath(tenantId)) && get(memberPath(tenantId)).data.active == true;
     }
-    function isTenantAdmin(tenantId) {
-      return belongsToTenant(tenantId) &&
-        membership(tenantId).data.role in ['platform_admin', 'organizer_admin', 'event_manager'];
+    function member(tenantId) { return get(memberPath(tenantId)).data; }
+    function hasRole(tenantId, roles) { return isMember(tenantId) && member(tenantId).role in roles; }
+    function isAdmin(tenantId) {
+      return hasRole(tenantId, ['platform_admin', 'organizer_admin', 'event_manager']);
+    }
+    function isOrganizerOperation(tenantId) {
+      return hasRole(tenantId, ['platform_admin', 'organizer_admin', 'event_manager', 'organizer_producer', 'organizer_service']);
+    }
+    function isProviderOperation(tenantId) {
+      return hasRole(tenantId, ['provider_admin', 'provider_service', 'provider_producer']);
+    }
+    function isExhibitor(tenantId) {
+      return hasRole(tenantId, ['exhibitor_admin', 'exhibitor_member']);
+    }
+    function providerMatches(tenantId, data) {
+      return isProviderOperation(tenantId) && data.providerId == member(tenantId).companyId;
+    }
+    function exhibitorMatches(tenantId, data) {
+      return isExhibitor(tenantId) && data.exhibitorId == member(tenantId).exhibitorId;
     }
 
     match /tenants/{tenantId} {
-      allow read: if belongsToTenant(tenantId);
-      allow write: if isTenantAdmin(tenantId);
+      allow read: if isMember(tenantId);
+      allow write: if isAdmin(tenantId);
 
       match /members/{memberId} {
-        allow read: if belongsToTenant(tenantId);
-        allow write: if isTenantAdmin(tenantId);
+        allow read: if isAdmin(tenantId) || (isMember(tenantId) && request.auth.uid == memberId);
+        allow write: if isAdmin(tenantId);
+      }
+
+      match /people/{personId} {
+        allow read: if isMember(tenantId);
+        allow create, update: if isAdmin(tenantId) ||
+          (hasRole(tenantId, ['provider_admin']) && request.resource.data.companyId == member(tenantId).companyId);
+        allow delete: if isAdmin(tenantId);
+      }
+
+      match /notifications/{notificationId} {
+        allow read: if isAdmin(tenantId) || (isMember(tenantId) && resource.data.recipientId == request.auth.uid);
+        allow update: if isMember(tenantId) && resource.data.recipientId == request.auth.uid &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt']);
+        allow create, delete: if false;
+      }
+
+      match /notificationOutbox/{notificationId} {
+        allow read: if isAdmin(tenantId);
+        allow write: if false;
+      }
+
+      match /events/{eventId} {
+        allow read: if isMember(tenantId);
+        allow write: if isAdmin(tenantId);
+
+        match /exhibitors/{exhibitorId} {
+          allow read: if isMember(tenantId);
+          allow write: if isOrganizerOperation(tenantId);
+        }
+
+        match /assignments/{assignmentId} {
+          allow read: if isMember(tenantId);
+          allow write: if isOrganizerOperation(tenantId);
+        }
+
+        match /tickets/{ticketId} {
+          allow read: if isOrganizerOperation(tenantId) || providerMatches(tenantId, resource.data) || exhibitorMatches(tenantId, resource.data);
+          allow create: if isOrganizerOperation(tenantId) || providerMatches(tenantId, request.resource.data) || exhibitorMatches(tenantId, request.resource.data);
+          allow update: if isOrganizerOperation(tenantId) || providerMatches(tenantId, resource.data) || exhibitorMatches(tenantId, resource.data);
+          allow delete: if isAdmin(tenantId);
+        }
+
+        match /imports/{importId} {
+          allow read, write: if isAdmin(tenantId);
+        }
+
+        match /{collection}/{document=**} {
+          allow read: if isMember(tenantId);
+          allow write: if isAdmin(tenantId);
+        }
       }
 
       match /{collection}/{document=**} {
-        allow read: if belongsToTenant(tenantId);
-        allow write: if belongsToTenant(tenantId);
+        allow read: if isMember(tenantId);
+        allow write: if isAdmin(tenantId);
       }
     }
 
