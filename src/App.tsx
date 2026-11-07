@@ -9,6 +9,10 @@ const ProvidersPage = lazy(async () => ({ default: (await import('./pages/Provid
 const TeamsPage = lazy(async () => ({ default: (await import('./pages/TeamsPage')).TeamsPage }));
 const ImportPage = lazy(async () => ({ default: (await import('./pages/ImportPage')).ImportPage }));
 const SettingsPage = lazy(async () => ({ default: (await import('./pages/SettingsPage')).SettingsPage }));
+const EventsPage = lazy(async () => ({ default: (await import('./pages/EventsPage')).EventsPage }));
+const ReportsPage = lazy(async () => ({ default: (await import('./pages/ReportsPage')).ReportsPage }));
+const UsersPage = lazy(async () => ({ default: (await import('./pages/UsersPage')).UsersPage }));
+const NotificationsPage = lazy(async () => ({ default: (await import('./pages/NotificationsPage')).NotificationsPage }));
 const PortalPage = lazy(async () => ({ default: (await import('./pages/PortalPage')).PortalPage }));
 
 export function App() {
@@ -22,6 +26,10 @@ export function App() {
           <Route path="expositores" element={<ExhibitorsPage />} />
           <Route path="fornecedores" element={<ProvidersPage />} />
           <Route path="equipes" element={<TeamsPage />} />
+          <Route path="eventos" element={<EventsPage />} />
+          <Route path="relatorios" element={<ReportsPage />} />
+          <Route path="usuarios" element={<UsersPage />} />
+          <Route path="notificacoes" element={<NotificationsPage />} />
           <Route path="importar" element={<ImportPage />} />
           <Route path="configuracoes" element={<SettingsPage />} />
         </Route>

@@ -17,9 +17,13 @@ Rotas principais:
 
 - `#/`: Sala de Guerra
 - `#/chamados`: gestão e ciclo dos chamados
+- `#/eventos`: portfólio, preparação e histórico de eventos
 - `#/expositores`: stands, documentos e classificação interna
 - `#/fornecedores`: fornecedores e matriz de responsabilidade
 - `#/equipes`: produtores, atendimentos e cobertura de ausência
+- `#/relatorios`: indicadores, ranking de fornecedores e exportação CSV
+- `#/usuarios`: usuários, acessos e matriz de permissões
+- `#/notificacoes`: alertas, escalonamentos e preferências de canais
 - `#/importar`: importação em lote por CSV
 - `#/configuracoes`: períodos operacionais e SLA
 - `#/portal`: portal white label do expositor
@@ -58,6 +62,10 @@ Quando um projeto real for criado, preencha as variáveis `VITE_FIREBASE_*` em `
 - SLA de aceite, resolução e escalonamento por prioridade.
 - Cobertura por produtor secundário quando o principal está ausente.
 - Portal white label em português, inglês e espanhol, com preferência de idioma persistida no navegador.
+- Gestão de múltiplos eventos, incluindo criação de rascunhos e acompanhamento da preparação.
+- Relatórios executivos com SLA, tempos médios, categorias e score de fornecedores.
+- Administração de usuários com escopo por organizadora, fornecedor ou expositor.
+- Central de notificações com alertas críticos e preferências para aplicativo, e-mail e WhatsApp.
 
 ## API de importação
 

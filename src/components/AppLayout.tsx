@@ -1,6 +1,8 @@
 import {
   Bell,
+  CalendarDays,
   Building2,
+  ChartNoAxesCombined,
   ChevronDown,
   FileUp,
   Gauge,
@@ -9,21 +11,25 @@ import {
   Settings,
   Store,
   TicketCheck,
+  UserRoundCog,
   Users,
   Wrench,
   X,
 } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppContext';
 import { Avatar } from './ui';
 
 const navItems = [
   { to: '/', label: 'Visão geral', icon: Gauge, end: true },
   { to: '/chamados', label: 'Chamados', icon: TicketCheck },
+  { to: '/eventos', label: 'Eventos', icon: CalendarDays },
   { to: '/expositores', label: 'Expositores', icon: Store },
   { to: '/fornecedores', label: 'Fornecedores', icon: Building2 },
   { to: '/equipes', label: 'Equipes', icon: Users },
+  { to: '/relatorios', label: 'Relatórios', icon: ChartNoAxesCombined },
+  { to: '/usuarios', label: 'Usuários', icon: UserRoundCog },
   { to: '/importar', label: 'Importar dados', icon: FileUp },
   { to: '/configuracoes', label: 'Configurações', icon: Settings },
 ];
@@ -34,6 +40,7 @@ export function AppLayout() {
   const { event, phase, tickets } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const openTickets = tickets.filter((ticket) => !['resolved', 'closed_not_performed'].includes(ticket.status)).length;
 
   const sidebar = (
@@ -78,7 +85,7 @@ export function AppLayout() {
       <main className="app-main">
         <header className="topbar">
           <button className="icon-button menu-button" onClick={() => setMobileOpen(true)} aria-label="Abrir menu"><Menu /></button>
-          <button className="event-selector">
+          <button className="event-selector" onClick={() => navigate('/eventos')}>
             <span className="event-logo">{event.brand.logoText}</span>
             <span><strong>{event.name}</strong><small>{event.venue}</small></span>
             <ChevronDown size={16} />
@@ -90,7 +97,7 @@ export function AppLayout() {
             <Search size={17} />
             <input aria-label="Buscar" placeholder="Buscar chamados, stands, expositores..." />
           </label>
-          <button className="icon-button notification-button" aria-label="Notificações"><Bell /><span /></button>
+          <NavLink to="/notificacoes" className={({ isActive }) => `icon-button notification-button${isActive ? ' active' : ''}`} aria-label="Notificações"><Bell /><span /></NavLink>
           <Avatar initials="AR" color="#5f50d5" />
         </header>
         <div className={`page-content page-${location.pathname.replace('/', '') || 'home'}`}>
