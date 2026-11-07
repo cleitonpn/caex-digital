@@ -104,11 +104,18 @@ O corpo segue este formato:
       "areaSqm": 48,
       "internalTier": "AAA",
       "projectUrl": "https://drive.google.com/...",
-      "memorialUrl": "https://drive.google.com/..."
+      "memorialUrl": "https://drive.google.com/...",
+      "furniture": [
+        { "quantity": 3, "type": "cadeiras DKR" },
+        { "quantity": 1, "type": "mesa DKR" },
+        { "quantity": 1, "type": "TV de 43pol" }
+      ]
     }
   ]
 }
 ```
+
+No modelo CSV, a coluna `mobiliario` reúne os itens em uma única célula. Use `/` ou vírgula para separar cada item e informe a quantidade no início, por exemplo: `3 cadeiras DKR / 1 mesa DKR / 1 lixeira / 1 TV de 43pol`.
 
 ## Verificação
 

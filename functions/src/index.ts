@@ -28,6 +28,7 @@ interface ImportExhibitor {
   internalTier?: 'AAA' | 'AA' | 'A' | 'B' | 'C';
   projectUrl?: string | null;
   memorialUrl?: string | null;
+  furniture?: Array<{ type: string; quantity: number }> | string | null;
 }
 
 interface TicketNotificationData {
@@ -220,7 +221,24 @@ function validateExhibitor(value: unknown, index: number): ImportExhibitor {
     internalTier: row.internalTier ?? 'C',
     projectUrl: safeUrl(row.projectUrl),
     memorialUrl: safeUrl(row.memorialUrl),
+    furniture: normalizeFurniture(row.furniture),
   };
+}
+
+function normalizeFurniture(value: ImportExhibitor['furniture']) {
+  const rawItems = typeof value === 'string'
+    ? value.split(/\s*[\/,]\s*/).map((entry) => {
+      const match = entry.trim().match(/^(\d+)\s*(?:x\s*)?(.+)$/i);
+      return match ? { quantity: Number(match[1]), type: match[2] } : { quantity: 1, type: entry };
+    })
+    : Array.isArray(value) ? value : [];
+  return rawItems.slice(0, 100).flatMap((item) => {
+    if (!item || typeof item.type !== 'string' || !item.type.trim()) return [];
+    return [{
+      type: item.type.trim().slice(0, 120),
+      quantity: Math.min(10_000, Math.max(1, Math.round(Number(item.quantity) || 1))),
+    }];
+  });
 }
 
 function cleanId(value: unknown) {

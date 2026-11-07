@@ -1415,3 +1415,46 @@ h1, h2, h3, p { margin-top: 0; }
   .brand-preview { min-height: 340px; }
   .brand-preview h3 { font-size: 25px; }
 }
+
+/* Furniture inventory */
+.furniture-form { margin: 0; padding: 13px; border: 1px solid var(--border); border-radius: 11px; }
+.furniture-form.full-span { grid-column: 1/-1; }
+.furniture-form legend { width: 100%; padding: 0 2px 8px; display: flex; align-items: center; justify-content: space-between; }
+.furniture-form legend > span { display: flex; align-items: center; gap: 6px; color: #4d4954; font-size: 8px; font-weight: 750; }
+.furniture-form legend svg { width: 15px; color: var(--primary); }
+.furniture-form > div { display: flex; flex-direction: column; gap: 7px; }
+.furniture-form-row { display: grid; grid-template-columns: 105px 1fr 34px; align-items: end; gap: 7px; }
+.furniture-form-row label { display: flex; flex-direction: column; gap: 4px; }
+.furniture-form-row label span { color: var(--muted); font-size: 7px; font-weight: 700; }
+.furniture-form-row input { width: 100%; height: 38px; padding: 0 9px; border: 1px solid #dcd9e1; border-radius: 8px; outline: 0; font-size: 8px; }
+.furniture-form-row .icon-button { width: 34px; height: 38px; }
+.furniture-empty { width: 100%; min-height: 90px; display: flex; align-items: center; flex-direction: column; justify-content: center; border: 1px dashed #d7d2dd; border-radius: 10px; color: var(--muted); background: #faf9fb; }
+.furniture-empty svg { width: 22px; color: var(--primary); }
+.furniture-empty strong { margin-top: 5px; font-size: 8px; }
+.furniture-empty small { margin-top: 2px; font-size: 7px; }
+.furniture-inventory { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.furniture-inventory > div { min-height: 54px; padding: 8px 10px; display: flex; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 10px; background: #faf9fb; }
+.furniture-inventory > div > b { min-width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; color: var(--primary); background: var(--primary-soft); font-size: 12px; }
+.furniture-inventory > div > span { display: flex; flex-direction: column; }
+.furniture-inventory strong { font-size: 8px; text-transform: capitalize; }
+.furniture-inventory small { margin-top: 2px; color: var(--muted); font-size: 7px; }
+.furniture-inventory-empty { min-height: 70px; padding: 12px; display: flex; align-items: center; gap: 10px; border-radius: 10px; color: var(--muted); background: #faf9fb; }
+.furniture-inventory-empty > svg { width: 22px; color: var(--primary); }
+.furniture-inventory-empty span { display: flex; flex-direction: column; }
+.furniture-inventory-empty strong { font-size: 8px; }
+.furniture-inventory-empty small { margin-top: 2px; font-size: 7px; }
+.furniture-summary-chip { min-height: 42px; margin-bottom: 10px; padding: 7px 9px; display: flex; align-items: center; gap: 7px; border-radius: 9px; color: #574c72; background: #f4f1fa; }
+.furniture-summary-chip > svg { width: 17px; color: var(--primary); }
+.furniture-summary-chip > span { display: flex; flex-direction: column; }
+.furniture-summary-chip strong { font-size: 8px; }
+.furniture-summary-chip small { margin-top: 1px; color: var(--muted); font-size: 7px; }
+.import-preview-table { min-width: 1060px; }
+.import-furniture-list { min-width: 175px; display: flex; flex-wrap: wrap; gap: 3px; }
+.import-furniture-list > span { padding: 3px 5px; border-radius: 5px; color: #5d566c; background: #f2eff6; font-size: 6px; white-space: nowrap; }
+.import-furniture-list b { color: var(--primary); }
+.import-furniture-list > small { color: var(--muted); font-size: 7px; }
+
+@media (max-width: 620px) {
+  .furniture-form-row { grid-template-columns: 80px 1fr 34px; }
+  .furniture-inventory { grid-template-columns: 1fr; }
+}

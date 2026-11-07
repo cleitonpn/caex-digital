@@ -13,6 +13,7 @@ import { policyForPriority, slaDeadlines } from '../domain/sla';
 import type {
   Event,
   Exhibitor,
+  FurnitureItem,
   ImportRow,
   OperationalPhase,
   OperationalWindow,
@@ -57,6 +58,7 @@ export interface ExhibitorInput {
   internalTier: Exhibitor['internalTier'];
   projectUrl?: string;
   memorialUrl?: string;
+  furniture: FurnitureItem[];
 }
 
 export interface ResponsibilityInput {
@@ -354,6 +356,7 @@ export function AppProvider({ children }: PropsWithChildren) {
           internalTier: row.tier,
           projectUrl: row.projectUrl,
           memorialUrl: row.memorialUrl,
+          furniture: row.furniture,
         }));
         persist((current) => ({
           ...current,

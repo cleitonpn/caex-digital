@@ -95,6 +95,12 @@ export interface Exhibitor {
   internalTier: 'AAA' | 'AA' | 'A' | 'B' | 'C';
   projectUrl?: string;
   memorialUrl?: string;
+  furniture?: FurnitureItem[];
+}
+
+export interface FurnitureItem {
+  type: string;
+  quantity: number;
 }
 
 export type ContractStatus = 'included' | 'contracted' | 'not_contracted';
@@ -167,4 +173,5 @@ export interface ImportRow {
   tier: Exhibitor['internalTier'];
   projectUrl?: string;
   memorialUrl?: string;
+  furniture: FurnitureItem[];
 }

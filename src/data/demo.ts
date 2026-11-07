@@ -240,6 +240,7 @@ export const demoExhibitors: Exhibitor[] = [
     internalTier: 'AAA',
     projectUrl: 'https://drive.google.com/example/project-aurora',
     memorialUrl: 'https://drive.google.com/example/memorial-aurora',
+    furniture: [{ quantity: 12, type: 'cadeiras DKR' }, { quantity: 3, type: 'mesas DKR' }, { quantity: 2, type: 'lixeiras' }, { quantity: 1, type: 'TV de 55pol' }],
   },
   {
     id: 'olist',
@@ -254,6 +255,7 @@ export const demoExhibitors: Exhibitor[] = [
     internalTier: 'AA',
     projectUrl: 'https://drive.google.com/example/project-olist',
     memorialUrl: 'https://drive.google.com/example/memorial-olist',
+    furniture: [{ quantity: 6, type: 'banquetas altas' }, { quantity: 2, type: 'balcões de atendimento' }, { quantity: 1, type: 'frigobar' }],
   },
   {
     id: 'nuvemshop',
@@ -268,6 +270,7 @@ export const demoExhibitors: Exhibitor[] = [
     internalTier: 'AAA',
     projectUrl: 'https://drive.google.com/example/project-nuvemshop',
     memorialUrl: 'https://drive.google.com/example/memorial-nuvemshop',
+    furniture: [{ quantity: 20, type: 'cadeiras DKR' }, { quantity: 5, type: 'mesas bistrô' }, { quantity: 2, type: 'TVs de 43pol' }],
   },
   {
     id: 'solaris',
@@ -280,6 +283,7 @@ export const demoExhibitors: Exhibitor[] = [
     pavilion: 'Pavilhão 3',
     areaSqm: 48,
     internalTier: 'A',
+    furniture: [{ quantity: 4, type: 'poltronas' }, { quantity: 2, type: 'mesas laterais' }],
   },
   {
     id: 'bossa-pay',
@@ -292,6 +296,7 @@ export const demoExhibitors: Exhibitor[] = [
     pavilion: 'Pavilhão 2',
     areaSqm: 36,
     internalTier: 'B',
+    furniture: [{ quantity: 4, type: 'cadeiras' }, { quantity: 1, type: 'mesa de reunião' }],
   },
   {
     id: 'horizon',
@@ -304,6 +309,7 @@ export const demoExhibitors: Exhibitor[] = [
     pavilion: 'Pavilhão 1',
     areaSqm: 24,
     internalTier: 'C',
+    furniture: [{ quantity: 2, type: 'banquetas' }, { quantity: 1, type: 'balcão' }],
   },
 ];
 

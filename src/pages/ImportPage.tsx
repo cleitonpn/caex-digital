@@ -1,5 +1,6 @@
-import { AlertCircle, CheckCircle2, Download, FileSpreadsheet, FileUp, Link2, UploadCloud } from 'lucide-react';
+import { AlertCircle, Armchair, CheckCircle2, Download, FileSpreadsheet, FileUp, Link2, UploadCloud } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
+import { parseFurnitureList } from '../domain/furniture';
 import type { ImportRow } from '../domain/types';
 import { useApp } from '../state/AppContext';
 import { Notice, PageHeader } from '../components/ui';
@@ -14,6 +15,7 @@ const headers = [
   'classificacao',
   'link_projeto',
   'link_memorial',
+  'mobiliario',
 ];
 
 export function ImportPage() {
@@ -42,7 +44,7 @@ export function ImportPage() {
   const downloadTemplate = () => {
     const example = [
       headers.join(';'),
-      'Aurora Tech;Marina Alves;marina@empresa.com;B124;Pavilhão 2;96;AAA;https://drive.google.com/projeto;https://drive.google.com/memorial',
+      'Aurora Tech;Marina Alves;marina@empresa.com;B124;Pavilhão 2;96;AAA;https://drive.google.com/projeto;https://drive.google.com/memorial;3 cadeiras DKR / 1 mesa DKR / 1 lixeira / 1 TV de 43pol',
     ].join('\n');
     const url = URL.createObjectURL(new Blob([example], { type: 'text/csv;charset=utf-8' }));
     const anchor = document.createElement('a');
@@ -63,11 +65,11 @@ export function ImportPage() {
     {imported !== null && <Notice title={`${imported} expositores importados`} tone="success">Agora você pode vincular fornecedores e equipes pela matriz de responsabilidades.</Notice>}
     {!rows.length ? <section className="panel upload-panel" onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); openFile(event.dataTransfer.files[0]); }}>
       <span className="upload-icon"><UploadCloud /></span><h2>Arraste a planilha para cá</h2><p>Use um arquivo CSV exportado do Excel ou Google Sheets. Os links do Drive serão mantidos nos cadastros.</p><button className="button button-primary" onClick={() => fileRef.current?.click()}><FileUp size={17} /> Escolher arquivo</button><input ref={fileRef} type="file" accept=".csv,text/csv" hidden onChange={(event) => openFile(event.target.files?.[0])} />
-      <div className="upload-features"><span><FileSpreadsheet /> Até 500 expositores por lote</span><span><Link2 /> Projeto e memorial por link</span><span><CheckCircle2 /> Validação antes de importar</span></div>
+      <div className="upload-features"><span><FileSpreadsheet /> Até 500 expositores por lote</span><span><Link2 /> Projeto e memorial por link</span><span><Armchair /> Mobiliário separado por / ou vírgula</span></div>
     </section> : <>
       <section className="panel import-summary"><div><span className="file-badge"><FileSpreadsheet /></span><div><strong>{fileName}</strong><small>{rows.length} linhas encontradas · {validRows.length} válidas</small></div></div><button className="text-button" onClick={() => { setRows([]); setErrors([]); }}>Trocar arquivo</button></section>
       {errors.length > 0 && <div className="notice notice-danger"><AlertCircle /><div><strong>{errors.length} pontos precisam de atenção</strong><span>{errors.slice(0, 3).join(' · ')}</span></div></div>}
-      <section className="panel import-preview"><div className="panel-header compact"><div><div><h2>Pré-visualização</h2><p>Confira os principais campos antes de importar</p></div></div><button className="button button-primary" disabled={!validRows.length || imported !== null} onClick={confirmImport}><CheckCircle2 size={17} /> Importar {validRows.length} expositores</button></div><div className="queue-table-wrap"><table className="data-table"><thead><tr><th>Status</th><th>Expositor</th><th>Responsável</th><th>Stand</th><th>Metragem</th><th>Classe interna</th><th>Documentos</th></tr></thead><tbody>{rows.slice(0, 20).map((row, index) => { const valid = row.exhibitorName && row.stand && row.responsibleEmail.includes('@'); return <tr key={`${row.exhibitorName}-${index}`}><td>{valid ? <span className="valid-row"><CheckCircle2 /> Válida</span> : <span className="invalid-row"><AlertCircle /> Revisar</span>}</td><td><strong>{row.exhibitorName || '—'}</strong></td><td>{row.responsibleName}<small className="table-subtext">{row.responsibleEmail}</small></td><td>{row.pavilion}<small className="table-subtext">{row.stand}</small></td><td>{row.areaSqm || 0} m²</td><td><span className="tier-badge">{row.tier}</span></td><td>{row.projectUrl ? 'Projeto' : '—'}{row.memorialUrl ? ' · Memorial' : ''}</td></tr>; })}</tbody></table></div></section>
+      <section className="panel import-preview"><div className="panel-header compact"><div><div><h2>Pré-visualização</h2><p>Confira os principais campos antes de importar</p></div></div><button className="button button-primary" disabled={!validRows.length || imported !== null} onClick={confirmImport}><CheckCircle2 size={17} /> Importar {validRows.length} expositores</button></div><div className="queue-table-wrap"><table className="data-table import-preview-table"><thead><tr><th>Status</th><th>Expositor</th><th>Responsável</th><th>Stand</th><th>Metragem</th><th>Classe interna</th><th>Mobiliário</th><th>Documentos</th></tr></thead><tbody>{rows.slice(0, 20).map((row, index) => { const valid = row.exhibitorName && row.stand && row.responsibleEmail.includes('@'); return <tr key={`${row.exhibitorName}-${index}`}><td>{valid ? <span className="valid-row"><CheckCircle2 /> Válida</span> : <span className="invalid-row"><AlertCircle /> Revisar</span>}</td><td><strong>{row.exhibitorName || '—'}</strong></td><td>{row.responsibleName}<small className="table-subtext">{row.responsibleEmail}</small></td><td>{row.pavilion}<small className="table-subtext">{row.stand}</small></td><td>{row.areaSqm || 0} m²</td><td><span className="tier-badge">{row.tier}</span></td><td><div className="import-furniture-list">{row.furniture.length ? row.furniture.map((item, itemIndex) => <span key={`${item.type}-${itemIndex}`}><b>{item.quantity}×</b> {item.type}</span>) : <small>Sem itens</small>}</div></td><td>{row.projectUrl ? 'Projeto' : '—'}{row.memorialUrl ? ' · Memorial' : ''}</td></tr>; })}</tbody></table></div></section>
     </>}
   </>;
 }
@@ -85,6 +87,8 @@ function parseSpreadsheetCsv(content: string): { rows: ImportRow[]; errors: stri
   const rows = lines.slice(1).map((line, rowIndex) => {
     const columns = splitCsvLine(line, separator);
     const tierValue = value(columns, 'classificacao').toUpperCase();
+    const furnitureIndex = indexOf('mobiliario');
+    const furnitureValue = furnitureIndex >= 0 ? columns.slice(furnitureIndex).join(separator) : '';
     const row: ImportRow = {
       exhibitorName: value(columns, 'expositor'),
       responsibleName: value(columns, 'responsavel'),
@@ -95,6 +99,7 @@ function parseSpreadsheetCsv(content: string): { rows: ImportRow[]; errors: stri
       tier: validTiers.has(tierValue) ? (tierValue as ImportRow['tier']) : 'C',
       projectUrl: value(columns, 'link_projeto') || undefined,
       memorialUrl: value(columns, 'link_memorial') || undefined,
+      furniture: parseFurnitureList(furnitureValue),
     };
     if (!row.exhibitorName || !row.stand || !row.responsibleEmail.includes('@')) errors.push(`Linha ${rowIndex + 2} incompleta`);
     return row;
