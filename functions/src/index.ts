@@ -3,7 +3,6 @@ import { getAuth } from 'firebase-admin/auth';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import cors from 'cors';
 import * as functions from 'firebase-functions/v1';
-import { onRequest } from 'firebase-functions/v2/https';
 
 initializeApp();
 
@@ -41,15 +40,18 @@ interface TicketNotificationData {
   organizerRecipientIds?: string[];
 }
 
-export const health = onRequest({ region: 'southamerica-east1' }, (request, response) => {
-  allowCors(request, response, () => {
-    response.status(200).json({ status: 'ok', service: 'caex-digital-api' });
+export const health = functions
+  .region('southamerica-east1')
+  .https.onRequest((request, response) => {
+    allowCors(request, response, () => {
+      response.status(200).json({ status: 'ok', service: 'caex-digital-api' });
+    });
   });
-});
 
-export const importExhibitors = onRequest(
-  { region: 'southamerica-east1', timeoutSeconds: 60, memory: '256MiB' },
-  (request, response) => {
+export const importExhibitors = functions
+  .runWith({ timeoutSeconds: 60, memory: '256MB' })
+  .region('southamerica-east1')
+  .https.onRequest((request, response) => {
     allowCors(request, response, async () => {
       try {
         if (request.method === 'OPTIONS') {
@@ -109,8 +111,7 @@ export const importExhibitors = onRequest(
         response.status(status).json({ error: message });
       }
     });
-  },
-);
+  });
 
 export const createTicketNotifications = functions
   .region('southamerica-east1')
