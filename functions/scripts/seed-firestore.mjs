@@ -37,11 +37,22 @@ try {
   const accessToken = await app.options.credential?.getAccessToken();
   if (accessToken) {
     const projectId = app.options.projectId ?? process.env.FIREBASE_PROJECT_ID;
-    const authConfig = await fetch(`https://identitytoolkit.googleapis.com/admin/v2/projects/${projectId}/config?updateMask=signIn.email`, {
+    const headers = { Authorization: `Bearer ${accessToken.access_token}`, 'Content-Type': 'application/json' };
+    const updateEmailProvider = () => fetch(`https://identitytoolkit.googleapis.com/admin/v2/projects/${projectId}/config?updateMask=signIn.email`, {
       method: 'PATCH',
-      headers: { Authorization: `Bearer ${accessToken.access_token}`, 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ signIn: { email: { enabled: true, passwordRequired: true } } }),
     });
+    let authConfig = await updateEmailProvider();
+    if (authConfig.status === 404) {
+      const initialized = await fetch(`https://identitytoolkit.googleapis.com/v2/projects/${projectId}/identityPlatform:initializeAuth`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({}),
+      });
+      if (!initialized.ok && initialized.status !== 409) throw new Error(`Não foi possível inicializar o Firebase Auth: HTTP ${initialized.status}.`);
+      authConfig = await updateEmailProvider();
+    }
     if (!authConfig.ok) console.warn(`Não foi possível ativar login por e-mail automaticamente: HTTP ${authConfig.status}.`);
   }
   const users = (await getAuth().listUsers(1000)).users;
