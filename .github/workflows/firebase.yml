@@ -37,8 +37,11 @@ jobs:
       - run: npm run build:all
       - name: Preparar credenciais do Firebase
         run: node .github/scripts/prepare-firebase-credentials.mjs
-      - name: Publicar Firestore e Functions prontas
-        run: npx firebase-tools deploy --only firestore,functions:health,functions:importExhibitors,functions:createTicketNotifications --project "$FIREBASE_PROJECT_ID" --non-interactive
+      - name: Publicar Functions prontas
+        run: npx firebase-tools deploy --only functions:health,functions:importExhibitors,functions:createTicketNotifications --project "$FIREBASE_PROJECT_ID" --non-interactive
+      - name: Publicar regras e índices do Firestore quando autorizado
+        continue-on-error: true
+        run: npx firebase-tools deploy --only firestore --project "$FIREBASE_PROJECT_ID" --non-interactive
       - name: Publicar regras do Storage quando autorizado
         continue-on-error: true
         run: npx firebase-tools deploy --only storage --project "$FIREBASE_PROJECT_ID" --non-interactive
