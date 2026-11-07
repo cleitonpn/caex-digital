@@ -64,6 +64,8 @@ Quando um projeto real for criado, preencha as variáveis `VITE_FIREBASE_*` em `
 
 O workflow [`.github/workflows/firebase.yml`](.github/workflows/firebase.yml) valida o projeto e publica regras, índices, Storage e as Functions prontas sempre que o backend muda na branch `main`. Ele usa o secret de repositório `FIREBASE_SERVICE_ACCOUNT`, que aceita tanto o JSON original da conta de serviço quanto esse JSON codificado em base64.
 
+A conta de serviço precisa conseguir administrar Firebase, Firestore, Functions e Cloud Storage for Firebase. A etapa de Storage é tolerante a falhas para que um bucket ainda não criado ou sem a permissão `firebasestorage.defaultBucket.get` não bloqueie Firestore e Functions.
+
 Para o GitHub Pages usar autenticação real, cadastre estas **Actions variables** no repositório:
 
 - `VITE_DATA_MODE=firebase`
