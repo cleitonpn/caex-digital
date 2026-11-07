@@ -69,7 +69,7 @@ export const demoCompanies: Company[] = [
     tenantId: 'nexo-eventos',
     name: 'MontaExpo',
     type: 'provider',
-    specialties: ['carpentry', 'electrical', 'upholstery', 'visual_communication', 'cleaning'],
+    specialties: ['carpentry', 'electrical', 'upholstery', 'visual_communication', 'cleaning', 'ab'],
   },
   {
     id: 'eletro-mont',

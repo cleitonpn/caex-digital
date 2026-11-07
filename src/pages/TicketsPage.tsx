@@ -6,7 +6,9 @@ import {
   Filter,
   MessageSquareText,
   Plus,
+  RotateCcw,
   Search,
+  Send,
   ShieldAlert,
   UserRoundCheck,
   X,
@@ -16,6 +18,7 @@ import { categoryById, serviceCategories } from '../domain/catalog';
 import type { Priority, Ticket, TicketStatus } from '../domain/types';
 import { useApp } from '../state/AppContext';
 import { Avatar, PageHeader, PriorityBadge, SlaPill, StatusBadge } from '../components/ui';
+import { CreateTicketModal } from '../components/CreateTicketModal';
 
 type FilterStatus = 'all' | 'active' | TicketStatus;
 
@@ -25,6 +28,7 @@ export function TicketsPage() {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<FilterStatus>('active');
   const [priority, setPriority] = useState<'all' | Priority>('all');
+  const [createOpen, setCreateOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -50,7 +54,7 @@ export function TicketsPage() {
       <PageHeader
         title="Chamados"
         description="Acompanhe o ciclo completo, os responsáveis e os acordos de SLA."
-        actions={<button className="button button-primary"><Plus size={17} /> Novo chamado</button>}
+        actions={<button className="button button-primary" onClick={() => setCreateOpen(true)}><Plus size={17} /> Novo chamado</button>}
       />
 
       <section className="toolbar panel">
@@ -85,8 +89,13 @@ export function TicketsPage() {
           onClose={() => setSelected(null)}
           onStatus={(next) => app.updateTicketStatus(currentSelected.id, next)}
           onReclassify={(category) => app.reclassifyTicket(currentSelected.id, category)}
+          onAddUpdate={(note) => app.addTicketUpdate(currentSelected.id, 'Organizadora · Ana Ribeiro', note)}
+          onReopen={(note) => app.reopenTicket(currentSelected.id, 'Organizadora · Ana Ribeiro', note)}
+          onTransfer={(producerId) => app.assignTicketProducer(currentSelected.id, producerId, 'Organizadora · Ana Ribeiro')}
+          onIntercept={() => app.interceptTicket(currentSelected.id, 'Organizadora · Ana Ribeiro')}
         />
       )}
+      <CreateTicketModal open={createOpen} onClose={() => setCreateOpen(false)} onCreated={(ticket) => setSelected(ticket)} createdBy="Organizadora · Ana Ribeiro" />
     </>
   );
 }
@@ -96,17 +105,28 @@ function TicketDrawer({
   onClose,
   onStatus,
   onReclassify,
+  onAddUpdate,
+  onReopen,
+  onTransfer,
+  onIntercept,
 }: {
   ticket: Ticket;
   onClose(): void;
   onStatus(status: TicketStatus): void;
   onReclassify(category: Ticket['reportedCategory']): void;
+  onAddUpdate(note: string): void;
+  onReopen(note: string): void;
+  onTransfer(producerId: string): void;
+  onIntercept(): void;
 }) {
   const app = useApp();
+  const [updateNote, setUpdateNote] = useState('');
+  const [reopenNote, setReopenNote] = useState('');
   const exhibitor = app.exhibitors.find((item) => item.id === ticket.exhibitorId)!;
   const provider = app.companies.find((item) => item.id === ticket.providerId);
   const producer = app.people.find((item) => item.id === ticket.assignedProducerId);
   const service = app.people.find((item) => item.id === ticket.assignedServiceId);
+  const producers = app.people.filter((item) => item.companyId === ticket.providerId && item.role === 'provider_producer');
 
   return (
     <div className="drawer-backdrop" onClick={onClose}>
@@ -130,6 +150,8 @@ function TicketDrawer({
           <p className="provider-label">Fornecedor responsável: <strong>{provider?.name}</strong></p>
         </section>
 
+        {ticket.photos?.length ? <section className="drawer-section"><h3><MessageSquareText /> Evidências anexadas</h3><div className="attachment-list">{ticket.photos.map((photo) => <span key={photo}>{photo}</span>)}</div></section> : null}
+
         <section className="drawer-section">
           <h3><ArrowLeftRight /> Classificação técnica</h3>
           <label className="stacked-field"><span>Categoria informada</span><strong>{categoryById[ticket.reportedCategory].label}</strong></label>
@@ -139,15 +161,27 @@ function TicketDrawer({
 
         <section className="drawer-section timeline-section">
           <h3><Clock3 /> Histórico do chamado</h3>
-          {ticket.timeline.slice().reverse().map((entry) => <div className="timeline-entry" key={entry.id}><i /><div><strong>{entry.action}</strong><span>{entry.actorName}</span><small>{new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(entry.at))}</small></div></div>)}
+          {ticket.timeline.slice().reverse().map((entry) => <div className="timeline-entry" key={entry.id}><i /><div><strong>{entry.action}</strong><span>{entry.actorName}</span>{entry.note && <p>{entry.note}</p>}<small>{new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(entry.at))}</small></div></div>)}
         </section>
+
+        <section className="drawer-section ticket-management-section">
+          <h3><UserRoundCheck /> Gestão operacional</h3>
+          <label className="stacked-field"><span>Produtor responsável</span><select value={ticket.assignedProducerId ?? ''} onChange={(event) => event.target.value && onTransfer(event.target.value)}><option value="">Sem produtor definido</option>{producers.map((person) => <option value={person.id} key={person.id}>{person.name}{person.available ? ' · disponível' : ' · ausente'}</option>)}</select></label>
+          {ticket.providerId !== 'nexo-eventos' && !['resolved', 'closed_not_performed'].includes(ticket.status) && <button className="button button-ghost full-button" onClick={onIntercept}><ShieldAlert /> Interceptar e assumir pela organizadora</button>}
+        </section>
+
+        <section className="drawer-section ticket-comment-section">
+          <h3><MessageSquareText /> Adicionar atualização</h3>
+          <div><textarea value={updateNote} onChange={(event) => setUpdateNote(event.target.value)} placeholder="Registre contato, previsão, orientação ou evidência da operação." /><button className="button button-primary" disabled={!updateNote.trim()} onClick={() => { onAddUpdate(updateNote.trim()); setUpdateNote(''); }}><Send /> Registrar</button></div>
+        </section>
+
+        {['awaiting_validation', 'resolved'].includes(ticket.status) && <section className="drawer-section ticket-reopen-section"><h3><RotateCcw /> Reabrir chamado</h3><p>O caso será enviado primeiro para a triagem presencial da organizadora.</p><textarea value={reopenNote} onChange={(event) => setReopenNote(event.target.value)} placeholder="Explique por que a solução não foi aceita." /><button className="button button-ghost full-button" disabled={reopenNote.trim().length < 5} onClick={() => { onReopen(reopenNote.trim()); setReopenNote(''); }}><RotateCcw /> Reabrir para triagem</button></section>}
 
         <div className="drawer-actions">
           {ticket.status === 'open' && <button className="button button-primary" onClick={() => onStatus('accepted')}><CheckCircle2 /> Aceitar chamado</button>}
           {ticket.status === 'accepted' && <button className="button button-primary" onClick={() => onStatus('in_progress')}><Clock3 /> Iniciar atendimento</button>}
           {ticket.status === 'in_progress' && <button className="button button-primary" onClick={() => onStatus('awaiting_validation')}><CheckCircle2 /> Enviar para validação</button>}
           {ticket.status === 'awaiting_validation' && <button className="button button-primary" onClick={() => onStatus('resolved')}><CheckCircle2 /> Validar e encerrar</button>}
-          <button className="button button-ghost"><MessageSquareText /> Adicionar atualização</button>
         </div>
       </aside>
     </div>

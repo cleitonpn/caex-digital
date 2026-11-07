@@ -77,6 +77,11 @@ Quando um projeto real for criado, preencha as variáveis `VITE_FIREBASE_*` em `
 - Relatórios executivos com SLA, tempos médios, categorias e score de fornecedores.
 - Administração de usuários com escopo por organizadora, fornecedor ou expositor.
 - Central de notificações com alertas críticos e preferências para aplicativo, e-mail e WhatsApp.
+- Abertura de chamados pela organizadora com roteamento, impacto, segurança e evidências.
+- Ficha completa do expositor com edição, documentos, chamados e responsabilidades.
+- Editor da matriz por montagem, evento e desmontagem, incluindo contratação e equipe responsável.
+- Gestão do chamado com atualizações, transferência de produtor, interceptação e reabertura para triagem.
+- Configuração editável de SLA e identidade white-label com pré-visualização.
 
 ## API de importação
 

@@ -1,5 +1,6 @@
-import { AlertTriangle, CheckCircle2, ClipboardCheck, MapPin, Navigation, Radio, RotateCcw, ShieldCheck, Siren } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ClipboardCheck, MapPin, Navigation, Plus, Radio, RotateCcw, ShieldCheck, Siren } from 'lucide-react';
 import { useState } from 'react';
+import { CreateTicketModal } from '../../components/CreateTicketModal';
 import { Avatar, MetricCard } from '../../components/ui';
 import { RolePageHeader, RoleWorkspace } from '../../components/RoleWorkspace';
 import { RoleTicketCard } from '../../components/RoleTicketCard';
@@ -8,6 +9,7 @@ import { useApp } from '../../state/AppContext';
 export function OrganizerProducerPage() {
   const app = useApp();
   const [roundDone, setRoundDone] = useState<string[]>(['Pavilhão A']);
+  const [ticketOpen, setTicketOpen] = useState(false);
   const active = app.tickets.filter((ticket) => !['resolved', 'closed_not_performed'].includes(ticket.status));
   const triage = active.filter((ticket) => ticket.status === 'reopened_triage');
   const critical = active.filter((ticket) => ticket.priority === 'critical');
@@ -15,7 +17,7 @@ export function OrganizerProducerPage() {
   const rounds = ['Pavilhão A', 'Pavilhão B', 'Praça central', 'Área externa'];
 
   return <RoleWorkspace roleLabel="Produtor da organizadora" organization="Nexo Eventos" personId="rafael-lima" accent="#0f766e">
-    <RolePageHeader eyebrow="Operação da organizadora em campo" title="Ronda e triagem operacional" description="Valide ocorrências no local, acompanhe fornecedores e intercepte casos quando necessário." actions={<button className="button button-primary"><Radio /> Iniciar nova ronda</button>} />
+    <RolePageHeader eyebrow="Operação da organizadora em campo" title="Ronda e triagem operacional" description="Valide ocorrências no local, acompanhe fornecedores e intercepte casos quando necessário." actions={<><button className="button button-ghost" onClick={() => setRoundDone([])}><Radio /> Nova ronda</button><button className="button button-primary" onClick={() => setTicketOpen(true)}><Plus /> Abrir ocorrência</button></>} />
     <section className="metrics-grid role-metrics"><MetricCard icon={MapPin} value={active.length} label="Ocorrências no pavilhão" trend="Todos os fornecedores" /><MetricCard icon={RotateCcw} value={triage.length} label="Reabertos para triagem" trend="Visita obrigatória" tone="warning" /><MetricCard icon={Siren} value={critical.length} label="Críticos ativos" trend="Acompanhar no local" tone="danger" /><MetricCard icon={ShieldCheck} value={unattended.length} label="Sem aceite" trend="Cobrança do fornecedor" /></section>
 
     <section className="organizer-producer-grid role-queue">
@@ -24,5 +26,6 @@ export function OrganizerProducerPage() {
     </section>
 
     <section className="panel organizer-field-team role-team"><div className="role-section-header"><div><span className="panel-icon"><ClipboardCheck /></span><span><h2>Equipe da organizadora em campo</h2><p>Quem pode apoiar uma triagem ou validação presencial</p></span></div></div><div className="organizer-field-people">{app.people.filter((person) => person.companyId === 'nexo-eventos').map((person) => <div key={person.id}><Avatar initials={person.initials} color={person.avatarColor} size="lg" /><span><strong>{person.name}</strong><small>{person.title}</small></span><i className={person.available ? 'online' : ''} /><b>{person.id === 'rafael-lima' ? 'Em ronda' : 'Sala operacional'}</b></div>)}</div></section>
+    <CreateTicketModal open={ticketOpen} onClose={() => setTicketOpen(false)} actorRole="organizer_producer" createdBy="Produtor da organizadora · Rafael Lima" />
   </RoleWorkspace>;
 }

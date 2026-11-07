@@ -12,9 +12,13 @@ import { resolveServiceAssignment } from '../domain/routing';
 import { policyForPriority, slaDeadlines } from '../domain/sla';
 import type {
   Event,
+  Exhibitor,
   ImportRow,
+  OperationalPhase,
   OperationalWindow,
+  ServiceAssignment,
   ServiceCategoryId,
+  SlaPolicy,
   Ticket,
   UserRole,
 } from '../domain/types';
@@ -40,6 +44,28 @@ interface CreateTicketInput {
   standBlocked: boolean;
   affectsOperation: boolean;
   createdBy: string;
+  attachments?: string[];
+}
+
+export interface ExhibitorInput {
+  name: string;
+  contactName: string;
+  contactEmail: string;
+  stand: string;
+  pavilion: string;
+  areaSqm: number;
+  internalTier: Exhibitor['internalTier'];
+  projectUrl?: string;
+  memorialUrl?: string;
+}
+
+export interface ResponsibilityInput {
+  category: ServiceCategoryId;
+  providerId: string;
+  contractStatus: ServiceAssignment['contractStatus'];
+  primaryProducerId?: string;
+  secondaryProducerId?: string;
+  providerServiceId?: string;
 }
 
 interface AppContextValue extends DemoState {
@@ -47,8 +73,16 @@ interface AppContextValue extends DemoState {
   createTicket(input: CreateTicketInput): { ticket?: Ticket; error?: string };
   updateTicketStatus(ticketId: string, status: Ticket['status']): void;
   reclassifyTicket(ticketId: string, category: ServiceCategoryId): void;
+  addTicketUpdate(ticketId: string, actorName: string, note: string): void;
+  reopenTicket(ticketId: string, actorName: string, note: string): void;
+  assignTicketProducer(ticketId: string, producerId: string, actorName: string): void;
+  interceptTicket(ticketId: string, actorName: string): void;
+  addExhibitor(input: ExhibitorInput): Exhibitor;
+  updateExhibitor(exhibitorId: string, input: ExhibitorInput): void;
+  replaceResponsibilities(exhibitorId: string, phase: OperationalPhase, inputs: ResponsibilityInput[]): void;
   updateEvent(event: Event): void;
   updateWindows(windows: OperationalWindow[]): void;
+  updateSlaPolicies(policies: SlaPolicy[]): void;
   toggleAvailability(personId: string): void;
   importExhibitors(rows: ImportRow[]): number;
   resetDemo(): void;
@@ -113,6 +147,7 @@ export function AppProvider({ children }: PropsWithChildren) {
           createdAt: state.now,
           ...deadlines,
           reopens: 0,
+          photos: input.attachments,
           timeline: [
             {
               id: crypto.randomUUID(),
@@ -185,11 +220,117 @@ export function AppProvider({ children }: PropsWithChildren) {
           ),
         }));
       },
+      addTicketUpdate(ticketId, actorName, note) {
+        persist((current) => ({
+          ...current,
+          tickets: current.tickets.map((ticket) => ticket.id === ticketId ? {
+            ...ticket,
+            timeline: [...ticket.timeline, {
+              id: crypto.randomUUID(),
+              at: current.now,
+              action: 'Atualização adicionada',
+              actorName,
+              note,
+            }],
+          } : ticket),
+        }));
+      },
+      reopenTicket(ticketId, actorName, note) {
+        persist((current) => ({
+          ...current,
+          tickets: current.tickets.map((ticket) => ticket.id === ticketId ? {
+            ...ticket,
+            status: 'reopened_triage',
+            reopens: ticket.reopens + 1,
+            timeline: [...ticket.timeline, {
+              id: crypto.randomUUID(),
+              at: current.now,
+              action: 'Chamado reaberto para triagem da organizadora',
+              actorName,
+              note,
+            }],
+          } : ticket),
+        }));
+      },
+      assignTicketProducer(ticketId, producerId, actorName) {
+        const producer = state.people.find((person) => person.id === producerId);
+        persist((current) => ({
+          ...current,
+          tickets: current.tickets.map((ticket) => ticket.id === ticketId ? {
+            ...ticket,
+            assignedProducerId: producerId,
+            timeline: [...ticket.timeline, {
+              id: crypto.randomUUID(),
+              at: current.now,
+              action: `Chamado transferido para ${producer?.name ?? 'outro produtor'}`,
+              actorName,
+            }],
+          } : ticket),
+        }));
+      },
+      interceptTicket(ticketId, actorName) {
+        persist((current) => ({
+          ...current,
+          tickets: current.tickets.map((ticket) => ticket.id === ticketId ? {
+            ...ticket,
+            providerId: 'nexo-eventos',
+            assignedProducerId: 'rafael-lima',
+            assignedServiceId: 'julia-costa',
+            status: 'in_progress',
+            timeline: [...ticket.timeline, {
+              id: crypto.randomUUID(),
+              at: current.now,
+              action: 'Responsabilidade assumida pela organizadora',
+              actorName,
+            }],
+          } : ticket),
+        }));
+      },
+      addExhibitor(input) {
+        const id = `${input.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
+        const exhibitor: Exhibitor = {
+          id,
+          eventId: state.event.id,
+          companyId: `exhibitor-company-${id}`,
+          ...input,
+        };
+        persist((current) => ({ ...current, exhibitors: [...current.exhibitors, exhibitor] }));
+        return exhibitor;
+      },
+      updateExhibitor(exhibitorId, input) {
+        persist((current) => ({
+          ...current,
+          exhibitors: current.exhibitors.map((exhibitor) => exhibitor.id === exhibitorId ? { ...exhibitor, ...input } : exhibitor),
+        }));
+      },
+      replaceResponsibilities(exhibitorId, operationalPhase, inputs) {
+        persist((current) => {
+          const retained = current.assignments.map((assignment) => assignment.exhibitorId === exhibitorId && assignment.phases.includes(operationalPhase)
+            ? { ...assignment, phases: assignment.phases.filter((item) => item !== operationalPhase) }
+            : assignment).filter((assignment) => assignment.phases.length > 0);
+          const replacements: ServiceAssignment[] = inputs.filter((input) => input.providerId).map((input) => ({
+            id: `${exhibitorId}-${input.category}-${operationalPhase}-${Date.now()}`,
+            eventId: current.event.id,
+            exhibitorId,
+            category: input.category,
+            phases: [operationalPhase],
+            providerId: input.providerId,
+            contractStatus: input.contractStatus,
+            primaryProducerId: input.primaryProducerId,
+            secondaryProducerId: input.secondaryProducerId,
+            providerServiceId: input.providerServiceId,
+          }));
+          return { ...current, assignments: [...retained, ...replacements] };
+        });
+      },
       updateEvent(event) {
         persist((current) => ({ ...current, event }));
       },
       updateWindows(windows) {
         persist((current) => ({ ...current, event: { ...current.event, windows } }));
+      },
+      updateSlaPolicies(policies) {
+        persist((current) => ({ ...current, slaPolicies: policies }));
       },
       toggleAvailability(personId) {
         persist((current) => ({

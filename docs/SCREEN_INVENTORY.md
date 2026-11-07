@@ -35,6 +35,11 @@ Este inventário relaciona cada papel do domínio com a experiência disponível
 - Central de notificações e canais.
 - Importação CSV e API de lotes.
 - Portal white label do expositor em três idiomas.
+- Formulário operacional de chamado para administradores, atendimento e produção da organizadora.
+- Ficha do expositor com cadastro, edição, documentos, chamados e matriz de responsabilidades.
+- Matriz editável por categoria e fase, com fornecedor, contratação, produtor e atendimento.
+- Gestão operacional com atualização, transferência, interceptação e reabertura.
+- SLA editável e identidade white label com pré-visualização.
 
 ## Módulos previstos para etapas posteriores
 

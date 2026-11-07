@@ -1,11 +1,16 @@
 import { Building2, ChevronRight, Network, Plus, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { ResponsibilityMatrixModal } from '../components/ResponsibilityMatrixModal';
 import { categoryById } from '../domain/catalog';
 import { useApp } from '../state/AppContext';
 import { Avatar, PageHeader } from '../components/ui';
 
 export function ProvidersPage() {
   const app = useApp();
+  const [matrixOpen, setMatrixOpen] = useState(false);
+  const [matrixExhibitorId, setMatrixExhibitorId] = useState(app.exhibitors[0]?.id ?? '');
   const providers = app.companies.filter((company) => company.type === 'provider');
+  const matrixExhibitor = app.exhibitors.find((item) => item.id === matrixExhibitorId) ?? null;
   return (
     <>
       <PageHeader title="Fornecedores" description="Empresas, escopos contratados e desempenho por feira." actions={<button className="button button-primary"><Plus size={17} /> Novo fornecedor</button>} />
@@ -28,13 +33,14 @@ export function ProvidersPage() {
       </section>
 
       <section className="panel responsibility-panel">
-        <div className="panel-header"><div><span className="panel-icon"><ShieldCheck /></span><div><h2>Matriz de responsabilidades</h2><p>Fornecedor responsável por stand, serviço e fase operacional</p></div></div><button className="button button-ghost">Editar em lote</button></div>
+        <div className="panel-header"><div><span className="panel-icon"><ShieldCheck /></span><div><h2>Matriz de responsabilidades</h2><p>Fornecedor responsável por stand, serviço e fase operacional</p></div></div><div className="matrix-panel-actions"><select aria-label="Expositor para editar" value={matrixExhibitorId} onChange={(event) => setMatrixExhibitorId(event.target.value)}>{app.exhibitors.map((exhibitor) => <option value={exhibitor.id} key={exhibitor.id}>{exhibitor.name} · {exhibitor.stand}</option>)}</select><button className="button button-ghost" onClick={() => setMatrixOpen(true)}>Editar matriz</button></div></div>
         <div className="queue-table-wrap"><table className="data-table"><thead><tr><th>Expositor</th><th>Stand</th><th>Serviço</th><th>Fases</th><th>Fornecedor</th><th>Contratação</th></tr></thead><tbody>{app.assignments.slice(0, 14).map((assignment) => {
           const exhibitor = app.exhibitors.find((item) => item.id === assignment.exhibitorId)!;
           const provider = providers.find((item) => item.id === assignment.providerId);
           return <tr key={assignment.id}><td><strong>{exhibitor.name}</strong></td><td>{exhibitor.stand}</td><td>{categoryById[assignment.category].label}</td><td><span className="phase-list">{assignment.phases.map((phase) => <i key={phase}>{phase === 'setup' ? 'Montagem' : phase === 'event' ? 'Evento' : 'Desmontagem'}</i>)}</span></td><td>{provider?.name}</td><td><span className={`contract-${assignment.contractStatus}`}>{assignment.contractStatus === 'included' ? 'Incluso' : assignment.contractStatus === 'contracted' ? 'Contratado' : 'Não contratado'}</span></td></tr>;
         })}</tbody></table></div>
       </section>
+      <ResponsibilityMatrixModal open={matrixOpen} exhibitor={matrixExhibitor} onClose={() => setMatrixOpen(false)} />
     </>
   );
 }
