@@ -8,14 +8,14 @@ import { firebaseIsConfigured, getFirebaseServices } from '../services/firebase'
 export function LoginPage() {
   const app = useApp();
   const navigate = useNavigate();
+  const firebaseMode = import.meta.env.VITE_DATA_MODE === 'firebase' && firebaseIsConfigured();
   const [showPassword, setShowPassword] = useState(false);
   const [language, setLanguage] = useState('PT');
-  const [email, setEmail] = useState('ana@nexoeventos.example');
-  const [password, setPassword] = useState('demonstracao');
+  const [email, setEmail] = useState(firebaseMode ? '' : 'ana@nexoeventos.example');
+  const [password, setPassword] = useState(firebaseMode ? '' : 'demonstracao');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const firebaseMode = import.meta.env.VITE_DATA_MODE === 'firebase' && firebaseIsConfigured();
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (!firebaseMode) { navigate('/perfis'); return; }

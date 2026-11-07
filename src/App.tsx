@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from './components/AppLayout';
+import { useApp } from './state/AppContext';
 
 const WarRoomPage = lazy(async () => ({ default: (await import('./pages/WarRoomPage')).WarRoomPage }));
 const TicketsPage = lazy(async () => ({ default: (await import('./pages/TicketsPage')).TicketsPage }));
@@ -24,21 +25,30 @@ const ProviderServicePage = lazy(async () => ({ default: (await import('./pages/
 const ProviderProducerPage = lazy(async () => ({ default: (await import('./pages/roles/ProviderProducerPage')).ProviderProducerPage }));
 const PlatformAdminPage = lazy(async () => ({ default: (await import('./pages/roles/PlatformAdminPage')).PlatformAdminPage }));
 
+function Protected({ children }: { children: React.ReactNode }) {
+  const app = useApp();
+  if (app.dataMode === 'demo') return children;
+  if (app.syncStatus === 'signed_out') return <Navigate to="/entrar" replace />;
+  if (app.syncStatus === 'loading') return <div className="route-loading"><span /> Conectando ao Firebase...</div>;
+  if (app.syncStatus === 'error') return <main className="sync-error-page"><h1>Não foi possível carregar a operação</h1><p>{app.syncError}</p><a href="#/entrar">Voltar ao acesso</a></main>;
+  return children;
+}
+
 export function App() {
   return (
     <Suspense fallback={<div className="route-loading"><span /> Carregando operação...</div>}>
       <Routes>
         <Route path="/entrar" element={<LoginPage />} />
-        <Route path="/perfis" element={<RoleSelectorPage />} />
-        <Route path="/portal" element={<PortalPage />} />
-        <Route path="/gestor" element={<ManagerPage />} />
-        <Route path="/organizador/producao" element={<OrganizerProducerPage />} />
-        <Route path="/organizador/atendimento" element={<OrganizerServicePage />} />
-        <Route path="/fornecedor" element={<ProviderAdminPage />} />
-        <Route path="/fornecedor/atendimento" element={<ProviderServicePage />} />
-        <Route path="/fornecedor/producao" element={<ProviderProducerPage />} />
-        <Route path="/admin-plataforma" element={<PlatformAdminPage />} />
-        <Route element={<AppLayout />}>
+        <Route path="/perfis" element={<Protected><RoleSelectorPage /></Protected>} />
+        <Route path="/portal" element={<Protected><PortalPage /></Protected>} />
+        <Route path="/gestor" element={<Protected><ManagerPage /></Protected>} />
+        <Route path="/organizador/producao" element={<Protected><OrganizerProducerPage /></Protected>} />
+        <Route path="/organizador/atendimento" element={<Protected><OrganizerServicePage /></Protected>} />
+        <Route path="/fornecedor" element={<Protected><ProviderAdminPage /></Protected>} />
+        <Route path="/fornecedor/atendimento" element={<Protected><ProviderServicePage /></Protected>} />
+        <Route path="/fornecedor/producao" element={<Protected><ProviderProducerPage /></Protected>} />
+        <Route path="/admin-plataforma" element={<Protected><PlatformAdminPage /></Protected>} />
+        <Route element={<Protected><AppLayout /></Protected>}>
           <Route index element={<WarRoomPage />} />
           <Route path="chamados" element={<TicketsPage />} />
           <Route path="expositores" element={<ExhibitorsPage />} />

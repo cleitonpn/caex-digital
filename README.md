@@ -66,7 +66,7 @@ O workflow [`.github/workflows/firebase.yml`](.github/workflows/firebase.yml) va
 
 A conta de serviço precisa conseguir administrar Firebase, Firestore, Functions e Cloud Storage for Firebase. As etapas de Firestore e Storage são tolerantes a falhas para que permissões de regras ou um bucket ainda não criado não bloqueiem a publicação das Functions.
 
-Para o GitHub Pages usar autenticação real, cadastre estas **Actions variables** no repositório:
+O GitHub Pages localiza ou cria automaticamente o aplicativo Web no projeto indicado por `FIREBASE_SERVICE_ACCOUNT` e injeta a configuração pública do SDK durante o build. As variáveis abaixo continuam aceitas para desenvolvimento local ou substituição explícita:
 
 - `VITE_DATA_MODE=firebase`
 - `VITE_FIREBASE_API_KEY`
@@ -76,7 +76,11 @@ Para o GitHub Pages usar autenticação real, cadastre estas **Actions variables
 - `VITE_FIREBASE_MESSAGING_SENDER_ID`
 - `VITE_FIREBASE_APP_ID`
 
-Sem essas variáveis, a publicação continua funcionando no modo demonstração. As notificações externas ficam na fila até que `RESEND_API_KEY`, `WHATSAPP_ACCESS_TOKEN` e `WHATSAPP_PHONE_NUMBER_ID` sejam cadastrados como secrets do Firebase; as notificações dentro do aplicativo continuam disponíveis.
+Em builds locais sem essas variáveis, a aplicação continua funcionando no modo demonstração. As notificações externas ficam na fila até que `RESEND_API_KEY`, `WHATSAPP_ACCESS_TOKEN` e `WHATSAPP_PHONE_NUMBER_ID` sejam cadastrados como secrets do Firebase; as notificações dentro do aplicativo continuam disponíveis.
+
+Na primeira publicação, `functions/scripts/seed-firestore.mjs` cria o evento piloto, empresas, equipes, expositores, responsabilidades, SLA e chamados no Firestore. Publicações seguintes preservam os dados existentes. Se o Firebase Auth estiver vazio, o e-mail do autor do commit é criado como primeiro administrador; use **Esqueci minha senha** na tela de acesso para definir a senha. A variável opcional `FIREBASE_BOOTSTRAP_ADMIN_EMAIL` permite escolher outro e-mail.
+
+No modo `firebase`, o frontend acompanha as coleções em tempo real e grava cada alteração na coleção correspondente. Usuários desconectados são direcionados para `#/entrar`; o modo local continua disponível com `VITE_DATA_MODE=demo`.
 
 ## Regras já implementadas
 

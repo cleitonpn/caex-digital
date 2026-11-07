@@ -1,0 +1,1539 @@
+{
+  "event": {
+    "id": "expo-summit-2027",
+    "tenantId": "nexo-eventos",
+    "name": "Expo Summit 2027",
+    "venue": "Distrito Anhembi · São Paulo",
+    "timezone": "America/Sao_Paulo",
+    "brand": {
+      "name": "Expo Summit 2027",
+      "logoText": "ES",
+      "primaryColor": "#3726b0",
+      "accentColor": "#7467ee"
+    },
+    "windows": [
+      {
+        "id": "setup-1",
+        "phase": "setup",
+        "startsAt": "2027-05-10T08:00:00-03:00",
+        "endsAt": "2027-05-10T22:00:00-03:00"
+      },
+      {
+        "id": "setup-2",
+        "phase": "setup",
+        "startsAt": "2027-05-11T08:00:00-03:00",
+        "endsAt": "2027-05-11T22:00:00-03:00"
+      },
+      {
+        "id": "setup-3",
+        "phase": "setup",
+        "startsAt": "2027-05-12T07:00:00-03:00",
+        "endsAt": "2027-05-12T12:00:00-03:00"
+      },
+      {
+        "id": "event-1",
+        "phase": "event",
+        "startsAt": "2027-05-12T14:00:00-03:00",
+        "endsAt": "2027-05-12T22:00:00-03:00"
+      },
+      {
+        "id": "event-2",
+        "phase": "event",
+        "startsAt": "2027-05-13T10:00:00-03:00",
+        "endsAt": "2027-05-13T20:00:00-03:00"
+      },
+      {
+        "id": "teardown-1",
+        "phase": "teardown",
+        "startsAt": "2027-05-13T20:00:00-03:00",
+        "endsAt": "2027-05-14T18:00:00-03:00"
+      }
+    ]
+  },
+  "companies": [
+    {
+      "id": "nexo-eventos",
+      "tenantId": "nexo-eventos",
+      "name": "Nexo Eventos",
+      "type": "organizer"
+    },
+    {
+      "id": "monta-expo",
+      "tenantId": "nexo-eventos",
+      "name": "MontaExpo",
+      "type": "provider",
+      "specialties": [
+        "carpentry",
+        "electrical",
+        "upholstery",
+        "visual_communication",
+        "cleaning",
+        "ab"
+      ]
+    },
+    {
+      "id": "eletro-mont",
+      "tenantId": "nexo-eventos",
+      "name": "EletroMont",
+      "type": "provider",
+      "specialties": [
+        "electrical"
+      ]
+    },
+    {
+      "id": "visual-com",
+      "tenantId": "nexo-eventos",
+      "name": "VisualCom",
+      "type": "provider",
+      "specialties": [
+        "visual_communication"
+      ]
+    },
+    {
+      "id": "luz-cena",
+      "tenantId": "nexo-eventos",
+      "name": "Luz & Cena",
+      "type": "provider",
+      "specialties": [
+        "av"
+      ]
+    },
+    {
+      "id": "verde-vivo",
+      "tenantId": "nexo-eventos",
+      "name": "Verde Vivo",
+      "type": "provider",
+      "specialties": [
+        "landscaping"
+      ]
+    },
+    {
+      "id": "clean-pro",
+      "tenantId": "nexo-eventos",
+      "name": "CleanPro",
+      "type": "provider",
+      "specialties": [
+        "cleaning"
+      ]
+    },
+    {
+      "id": "mobille",
+      "tenantId": "nexo-eventos",
+      "name": "Mobille Locações",
+      "type": "provider",
+      "specialties": [
+        "furniture"
+      ]
+    }
+  ],
+  "people": [
+    {
+      "id": "ana-ribeiro",
+      "companyId": "nexo-eventos",
+      "name": "Ana Ribeiro",
+      "role": "event_manager",
+      "title": "Gestora da feira",
+      "initials": "AR",
+      "avatarColor": "#6d5ce7",
+      "email": "ana@nexoeventos.example",
+      "active": true,
+      "available": true
+    },
+    {
+      "id": "rafael-lima",
+      "companyId": "nexo-eventos",
+      "name": "Rafael Lima",
+      "role": "organizer_producer",
+      "title": "Produtor da organizadora",
+      "initials": "RL",
+      "avatarColor": "#0f7a68",
+      "email": "rafael@nexoeventos.example",
+      "active": true,
+      "available": true
+    },
+    {
+      "id": "julia-costa",
+      "companyId": "nexo-eventos",
+      "name": "Júlia Costa",
+      "role": "organizer_service",
+      "title": "Atendimento da organizadora",
+      "initials": "JC",
+      "avatarColor": "#d06b3b",
+      "email": "julia@nexoeventos.example",
+      "active": true,
+      "available": true
+    },
+    {
+      "id": "carlos-mendes",
+      "companyId": "monta-expo",
+      "name": "Carlos Mendes",
+      "role": "provider_producer",
+      "title": "Produtor principal",
+      "initials": "CM",
+      "avatarColor": "#3c63bd",
+      "email": "carlos@montaexpo.example",
+      "active": true,
+      "available": true
+    },
+    {
+      "id": "marcos-lima",
+      "companyId": "monta-expo",
+      "name": "Marcos Lima",
+      "role": "provider_producer",
+      "title": "Produtor secundário",
+      "initials": "ML",
+      "avatarColor": "#8b4c9e",
+      "email": "marcos@montaexpo.example",
+      "active": true,
+      "available": true
+    },
+    {
+      "id": "bianca-souza",
+      "companyId": "monta-expo",
+      "name": "Bianca Souza",
+      "role": "provider_service",
+      "title": "Atendimento do fornecedor",
+      "initials": "BS",
+      "avatarColor": "#c25475",
+      "email": "bianca@montaexpo.example",
+      "active": true,
+      "available": true
+    },
+    {
+      "id": "lucas-rocha",
+      "companyId": "eletro-mont",
+      "name": "Lucas Rocha",
+      "role": "provider_producer",
+      "title": "Produtor eletricista",
+      "initials": "LR",
+      "avatarColor": "#247a86",
+      "email": "lucas@eletromont.example",
+      "active": true,
+      "available": true
+    },
+    {
+      "id": "aline-mota",
+      "companyId": "eletro-mont",
+      "name": "Aline Mota",
+      "role": "provider_service",
+      "title": "Atendimento do fornecedor",
+      "initials": "AM",
+      "avatarColor": "#9d6c1f",
+      "email": "aline@eletromont.example",
+      "active": true,
+      "available": true
+    },
+    {
+      "id": "paulo-nunes",
+      "companyId": "visual-com",
+      "name": "Paulo Nunes",
+      "role": "provider_producer",
+      "title": "Produtor de comunicação visual",
+      "initials": "PN",
+      "avatarColor": "#695a47",
+      "email": "paulo@visualcom.example",
+      "active": true,
+      "available": false
+    }
+  ],
+  "exhibitors": [
+    {
+      "id": "aurora-tech",
+      "eventId": "expo-summit-2027",
+      "companyId": "aurora-tech-company",
+      "name": "Aurora Tech",
+      "contactName": "Marina Alves",
+      "contactEmail": "marina@auroratech.example",
+      "stand": "B124",
+      "pavilion": "Pavilhão 2",
+      "areaSqm": 96,
+      "internalTier": "AAA",
+      "projectUrl": "https://drive.google.com/example/project-aurora",
+      "memorialUrl": "https://drive.google.com/example/memorial-aurora",
+      "furniture": [
+        {
+          "quantity": 12,
+          "type": "cadeiras DKR"
+        },
+        {
+          "quantity": 3,
+          "type": "mesas DKR"
+        },
+        {
+          "quantity": 2,
+          "type": "lixeiras"
+        },
+        {
+          "quantity": 1,
+          "type": "TV de 55pol"
+        }
+      ]
+    },
+    {
+      "id": "olist",
+      "eventId": "expo-summit-2027",
+      "companyId": "olist-company",
+      "name": "Olist",
+      "contactName": "Fernanda Teles",
+      "contactEmail": "fernanda@olist.example",
+      "stand": "C037",
+      "pavilion": "Pavilhão 1",
+      "areaSqm": 64,
+      "internalTier": "AA",
+      "projectUrl": "https://drive.google.com/example/project-olist",
+      "memorialUrl": "https://drive.google.com/example/memorial-olist",
+      "furniture": [
+        {
+          "quantity": 6,
+          "type": "banquetas altas"
+        },
+        {
+          "quantity": 2,
+          "type": "balcões de atendimento"
+        },
+        {
+          "quantity": 1,
+          "type": "frigobar"
+        }
+      ]
+    },
+    {
+      "id": "nuvemshop",
+      "eventId": "expo-summit-2027",
+      "companyId": "nuvemshop-company",
+      "name": "Nuvemshop",
+      "contactName": "Pedro Martins",
+      "contactEmail": "pedro@nuvemshop.example",
+      "stand": "A208",
+      "pavilion": "Pavilhão 1",
+      "areaSqm": 120,
+      "internalTier": "AAA",
+      "projectUrl": "https://drive.google.com/example/project-nuvemshop",
+      "memorialUrl": "https://drive.google.com/example/memorial-nuvemshop",
+      "furniture": [
+        {
+          "quantity": 20,
+          "type": "cadeiras DKR"
+        },
+        {
+          "quantity": 5,
+          "type": "mesas bistrô"
+        },
+        {
+          "quantity": 2,
+          "type": "TVs de 43pol"
+        }
+      ]
+    },
+    {
+      "id": "solaris",
+      "eventId": "expo-summit-2027",
+      "companyId": "solaris-company",
+      "name": "Solaris Energia",
+      "contactName": "Renato Paes",
+      "contactEmail": "renato@solaris.example",
+      "stand": "D115",
+      "pavilion": "Pavilhão 3",
+      "areaSqm": 48,
+      "internalTier": "A",
+      "furniture": [
+        {
+          "quantity": 4,
+          "type": "poltronas"
+        },
+        {
+          "quantity": 2,
+          "type": "mesas laterais"
+        }
+      ]
+    },
+    {
+      "id": "bossa-pay",
+      "eventId": "expo-summit-2027",
+      "companyId": "bossa-company",
+      "name": "Bossa Pay",
+      "contactName": "Luana Reis",
+      "contactEmail": "luana@bossapay.example",
+      "stand": "B091",
+      "pavilion": "Pavilhão 2",
+      "areaSqm": 36,
+      "internalTier": "B",
+      "furniture": [
+        {
+          "quantity": 4,
+          "type": "cadeiras"
+        },
+        {
+          "quantity": 1,
+          "type": "mesa de reunião"
+        }
+      ]
+    },
+    {
+      "id": "horizon",
+      "eventId": "expo-summit-2027",
+      "companyId": "horizon-company",
+      "name": "Horizon Labs",
+      "contactName": "Felipe Dias",
+      "contactEmail": "felipe@horizon.example",
+      "stand": "A044",
+      "pavilion": "Pavilhão 1",
+      "areaSqm": 24,
+      "internalTier": "C",
+      "furniture": [
+        {
+          "quantity": 2,
+          "type": "banquetas"
+        },
+        {
+          "quantity": 1,
+          "type": "balcão"
+        }
+      ]
+    }
+  ],
+  "assignments": [
+    {
+      "id": "aurora-tech-carpentry-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "carpentry",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "aurora-tech-upholstery-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "upholstery",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "aurora-tech-visual_communication-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "visual_communication",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "visual-com",
+      "contractStatus": "included",
+      "primaryProducerId": "paulo-nunes",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "aurora-tech-furniture-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "furniture",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "mobille",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "aurora-tech-landscaping-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "landscaping",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "verde-vivo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "aurora-tech-av-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "av",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "luz-cena",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "aurora-tech-ab-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "ab",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "aurora-tech-electrical-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "electrical",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "eletro-mont",
+      "contractStatus": "included",
+      "primaryProducerId": "lucas-rocha",
+      "providerServiceId": "aline-mota"
+    },
+    {
+      "id": "aurora-tech-cleaning-setup",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "cleaning",
+      "phases": [
+        "setup"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "aurora-tech-cleaning-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "category": "cleaning",
+      "phases": [
+        "event"
+      ],
+      "providerId": "clean-pro",
+      "contractStatus": "not_contracted",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-carpentry-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "carpentry",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-upholstery-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "upholstery",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-visual_communication-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "visual_communication",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "visual-com",
+      "contractStatus": "included",
+      "primaryProducerId": "paulo-nunes",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-furniture-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "furniture",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "mobille",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-landscaping-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "landscaping",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "verde-vivo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-av-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "av",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "luz-cena",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-ab-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "ab",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-electrical-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "electrical",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-cleaning-setup",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "cleaning",
+      "phases": [
+        "setup"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "olist-cleaning-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "category": "cleaning",
+      "phases": [
+        "event"
+      ],
+      "providerId": "clean-pro",
+      "contractStatus": "contracted",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-carpentry-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "carpentry",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-upholstery-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "upholstery",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-visual_communication-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "visual_communication",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "visual-com",
+      "contractStatus": "included",
+      "primaryProducerId": "paulo-nunes",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-furniture-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "furniture",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "mobille",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-landscaping-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "landscaping",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "verde-vivo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-av-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "av",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "luz-cena",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-ab-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "ab",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-electrical-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "electrical",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-cleaning-setup",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "cleaning",
+      "phases": [
+        "setup"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "nuvemshop-cleaning-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "category": "cleaning",
+      "phases": [
+        "event"
+      ],
+      "providerId": "clean-pro",
+      "contractStatus": "contracted",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-carpentry-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "carpentry",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-upholstery-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "upholstery",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-visual_communication-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "visual_communication",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "visual-com",
+      "contractStatus": "included",
+      "primaryProducerId": "paulo-nunes",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-furniture-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "furniture",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "mobille",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-landscaping-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "landscaping",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "verde-vivo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-av-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "av",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "luz-cena",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-ab-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "ab",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-electrical-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "electrical",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-cleaning-setup",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "cleaning",
+      "phases": [
+        "setup"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "solaris-cleaning-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "category": "cleaning",
+      "phases": [
+        "event"
+      ],
+      "providerId": "clean-pro",
+      "contractStatus": "contracted",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-carpentry-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "carpentry",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-upholstery-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "upholstery",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-visual_communication-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "visual_communication",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "visual-com",
+      "contractStatus": "included",
+      "primaryProducerId": "paulo-nunes",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-furniture-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "furniture",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "mobille",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-landscaping-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "landscaping",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "verde-vivo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-av-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "av",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "luz-cena",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-ab-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "ab",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-electrical-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "electrical",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-cleaning-setup",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "cleaning",
+      "phases": [
+        "setup"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "bossa-pay-cleaning-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "category": "cleaning",
+      "phases": [
+        "event"
+      ],
+      "providerId": "clean-pro",
+      "contractStatus": "contracted",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-carpentry-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "carpentry",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-upholstery-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "upholstery",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-visual_communication-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "visual_communication",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "visual-com",
+      "contractStatus": "included",
+      "primaryProducerId": "paulo-nunes",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-furniture-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "furniture",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "mobille",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-landscaping-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "landscaping",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "verde-vivo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-av-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "av",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "luz-cena",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-ab-setup-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "ab",
+      "phases": [
+        "setup",
+        "event"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-electrical-setup-event-teardown",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "electrical",
+      "phases": [
+        "setup",
+        "event",
+        "teardown"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-cleaning-setup",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "cleaning",
+      "phases": [
+        "setup"
+      ],
+      "providerId": "monta-expo",
+      "contractStatus": "included",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    },
+    {
+      "id": "horizon-cleaning-event",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "category": "cleaning",
+      "phases": [
+        "event"
+      ],
+      "providerId": "clean-pro",
+      "contractStatus": "not_contracted",
+      "primaryProducerId": "carlos-mendes",
+      "secondaryProducerId": "marcos-lima",
+      "providerServiceId": "bianca-souza"
+    }
+  ],
+  "slaPolicies": [
+    {
+      "id": "sla-critical",
+      "priority": "critical",
+      "acceptMinutes": 5,
+      "resolveMinutes": 45,
+      "escalationAfterMinutes": 0
+    },
+    {
+      "id": "sla-high",
+      "priority": "high",
+      "acceptMinutes": 15,
+      "resolveMinutes": 90,
+      "escalationAfterMinutes": 15
+    },
+    {
+      "id": "sla-medium",
+      "priority": "medium",
+      "acceptMinutes": 30,
+      "resolveMinutes": 180,
+      "escalationAfterMinutes": 60
+    },
+    {
+      "id": "sla-low",
+      "priority": "low",
+      "acceptMinutes": 60,
+      "resolveMinutes": 360,
+      "escalationAfterMinutes": 180
+    }
+  ],
+  "tickets": [
+    {
+      "id": "CH-7482",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "reportedCategory": "electrical",
+      "description": "Cheiro de queimado e faíscas no quadro próximo à área de demonstração.",
+      "status": "open",
+      "priority": "critical",
+      "priorityScore": 100,
+      "priorityReasons": [
+        "Risco à segurança",
+        "Stand impedido de operar"
+      ],
+      "origin": "organizer",
+      "providerId": "eletro-mont",
+      "assignedProducerId": "lucas-rocha",
+      "assignedServiceId": "aline-mota",
+      "createdAt": "2027-05-12T09:34:00-03:00",
+      "acceptDueAt": "2027-05-12T09:39:00-03:00",
+      "resolveDueAt": "2027-05-12T10:19:00-03:00",
+      "escalatedAt": "2027-05-12T09:39:00-03:00",
+      "reopens": 0,
+      "timeline": [
+        {
+          "id": "a5bd32c3-59bc-498a-badc-d3726731ad4f",
+          "at": "2027-05-12T09:34:00-03:00",
+          "action": "Chamado aberto",
+          "actorName": "Rafael Lima"
+        }
+      ]
+    },
+    {
+      "id": "CH-7479",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "olist",
+      "reportedCategory": "cleaning",
+      "description": "Acúmulo de resíduos da montagem bloqueando o acesso lateral.",
+      "status": "accepted",
+      "priority": "high",
+      "priorityScore": 61,
+      "priorityReasons": [
+        "Impacta a operação do stand",
+        "Abertura do evento próxima"
+      ],
+      "origin": "organizer",
+      "providerId": "monta-expo",
+      "assignedProducerId": "carlos-mendes",
+      "assignedServiceId": "bianca-souza",
+      "createdAt": "2027-05-12T09:42:00-03:00",
+      "acceptedAt": "2027-05-12T09:48:00-03:00",
+      "acceptDueAt": "2027-05-12T09:57:00-03:00",
+      "resolveDueAt": "2027-05-12T11:12:00-03:00",
+      "reopens": 0,
+      "timeline": [
+        {
+          "id": "eba056ba-ffec-4c64-a3be-b48dd535e35a",
+          "at": "2027-05-12T09:42:00-03:00",
+          "action": "Chamado aberto",
+          "actorName": "Júlia Costa"
+        },
+        {
+          "id": "tl-7479-2",
+          "at": "2027-05-12T09:48:00-03:00",
+          "action": "Chamado aceito",
+          "actorName": "Carlos Mendes"
+        }
+      ]
+    },
+    {
+      "id": "CH-7468",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "nuvemshop",
+      "reportedCategory": "carpentry",
+      "description": "Ajuste de acabamento na testeira principal do stand.",
+      "status": "in_progress",
+      "priority": "medium",
+      "priorityScore": 45,
+      "priorityReasons": [
+        "Abertura do evento próxima"
+      ],
+      "origin": "provider",
+      "providerId": "monta-expo",
+      "assignedProducerId": "marcos-lima",
+      "assignedServiceId": "bianca-souza",
+      "createdAt": "2027-05-12T09:08:00-03:00",
+      "acceptedAt": "2027-05-12T09:16:00-03:00",
+      "startedAt": "2027-05-12T09:29:00-03:00",
+      "acceptDueAt": "2027-05-12T09:38:00-03:00",
+      "resolveDueAt": "2027-05-12T12:08:00-03:00",
+      "reopens": 0,
+      "timeline": [
+        {
+          "id": "1a356679-2c37-4d5c-89eb-4a30c4b81441",
+          "at": "2027-05-12T09:08:00-03:00",
+          "action": "Chamado aberto",
+          "actorName": "Marcos Lima"
+        }
+      ]
+    },
+    {
+      "id": "CH-7461",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "solaris",
+      "reportedCategory": "av",
+      "description": "Uma das telas de demonstração não recebe sinal.",
+      "status": "open",
+      "priority": "medium",
+      "priorityScore": 41,
+      "priorityReasons": [
+        "Impacta a operação do stand"
+      ],
+      "origin": "exhibitor",
+      "providerId": "luz-cena",
+      "createdAt": "2027-05-12T09:00:00-03:00",
+      "acceptDueAt": "2027-05-12T09:30:00-03:00",
+      "resolveDueAt": "2027-05-12T12:00:00-03:00",
+      "escalatedAt": "2027-05-12T10:30:00-03:00",
+      "reopens": 0,
+      "timeline": [
+        {
+          "id": "1d7edb65-7b39-464a-bbda-cbeb155fe2ae",
+          "at": "2027-05-12T09:00:00-03:00",
+          "action": "Chamado aberto",
+          "actorName": "Renato Paes"
+        }
+      ]
+    },
+    {
+      "id": "CH-7457",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "bossa-pay",
+      "reportedCategory": "visual_communication",
+      "description": "Alinhamento da sinalização lateral e revisão de adesivo.",
+      "status": "open",
+      "priority": "medium",
+      "priorityScore": 35,
+      "priorityReasons": [
+        "Abertura do evento próxima"
+      ],
+      "origin": "organizer",
+      "providerId": "visual-com",
+      "assignedProducerId": "paulo-nunes",
+      "createdAt": "2027-05-12T08:53:00-03:00",
+      "acceptDueAt": "2027-05-12T09:23:00-03:00",
+      "resolveDueAt": "2027-05-12T11:53:00-03:00",
+      "reopens": 0,
+      "timeline": [
+        {
+          "id": "040bb0a1-4e08-4856-98e8-b48940ff0e3b",
+          "at": "2027-05-12T08:53:00-03:00",
+          "action": "Chamado aberto",
+          "actorName": "Rafael Lima"
+        }
+      ]
+    },
+    {
+      "id": "CH-7452",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "horizon",
+      "reportedCategory": "furniture",
+      "description": "Troca de uma cadeira com acabamento danificado.",
+      "status": "awaiting_validation",
+      "priority": "low",
+      "priorityScore": 18,
+      "priorityReasons": [],
+      "origin": "exhibitor",
+      "providerId": "mobille",
+      "createdAt": "2027-05-12T08:30:00-03:00",
+      "acceptedAt": "2027-05-12T08:42:00-03:00",
+      "startedAt": "2027-05-12T08:55:00-03:00",
+      "resolvedAt": "2027-05-12T09:58:00-03:00",
+      "acceptDueAt": "2027-05-12T09:30:00-03:00",
+      "resolveDueAt": "2027-05-12T14:30:00-03:00",
+      "reopens": 0,
+      "timeline": [
+        {
+          "id": "991355dd-b133-47e0-b34f-12a1849e0a7d",
+          "at": "2027-05-12T08:30:00-03:00",
+          "action": "Chamado aberto",
+          "actorName": "Felipe Dias"
+        }
+      ]
+    },
+    {
+      "id": "CH-7444",
+      "eventId": "expo-summit-2027",
+      "exhibitorId": "aurora-tech",
+      "reportedCategory": "carpentry",
+      "resolvedCategory": "electrical",
+      "description": "Balcão de demonstração sem alimentação elétrica.",
+      "status": "resolved",
+      "priority": "high",
+      "priorityScore": 63,
+      "priorityReasons": [
+        "Impacta a operação do stand"
+      ],
+      "origin": "exhibitor",
+      "providerId": "eletro-mont",
+      "assignedProducerId": "lucas-rocha",
+      "assignedServiceId": "aline-mota",
+      "createdAt": "2027-05-12T07:50:00-03:00",
+      "acceptedAt": "2027-05-12T07:57:00-03:00",
+      "startedAt": "2027-05-12T08:05:00-03:00",
+      "resolvedAt": "2027-05-12T08:38:00-03:00",
+      "acceptDueAt": "2027-05-12T08:05:00-03:00",
+      "resolveDueAt": "2027-05-12T09:20:00-03:00",
+      "reopens": 0,
+      "timeline": [
+        {
+          "id": "e8337016-5099-4d90-b51a-1962db4a2fc1",
+          "at": "2027-05-12T07:50:00-03:00",
+          "action": "Chamado aberto",
+          "actorName": "Marina Alves"
+        }
+      ]
+    }
+  ],
+  "now": "2027-05-12T10:20:00-03:00"
+}

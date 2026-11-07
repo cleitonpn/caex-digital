@@ -10,6 +10,7 @@ on:
       - 'firestore.indexes.json'
       - 'storage.rules'
       - 'firebase.json'
+      - 'firebase.seed.json'
       - '.github/workflows/firebase.yml'
       - '.github/scripts/prepare-firebase-credentials.mjs'
 
@@ -43,6 +44,10 @@ jobs:
       - name: Publicar regras do Storage quando autorizado
         continue-on-error: true
         run: npx firebase-tools deploy --only storage --project "$FIREBASE_PROJECT_ID" --non-interactive
+      - name: Criar carga inicial preservando dados existentes
+        env:
+          FIREBASE_BOOTSTRAP_ADMIN_EMAIL: ${{ vars.FIREBASE_BOOTSTRAP_ADMIN_EMAIL }}
+        run: node functions/scripts/seed-firestore.mjs
       - name: Publicar Functions prontas
         run: npx firebase-tools deploy --only functions:health,functions:importExhibitors,functions:createTicketNotifications --project "$FIREBASE_PROJECT_ID" --non-interactive --force
       - name: Validar API publicada

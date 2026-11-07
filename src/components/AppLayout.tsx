@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppContext';
 import { Avatar } from './ui';
+import { getFirebaseServices } from '../services/firebase';
 
 const navItems = [
   { to: '/', label: 'Visão geral', icon: Gauge, end: true },
@@ -37,10 +38,18 @@ const navItems = [
 const phaseLabel = { setup: 'Montagem', event: 'Evento', teardown: 'Desmontagem' };
 
 export function AppLayout() {
-  const { event, phase, tickets } = useApp();
+  const { event, phase, tickets, dataMode, syncStatus, syncError } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const openProfile = () => {
+    if (dataMode === 'firebase') {
+      const services = getFirebaseServices();
+      if (services) void services.auth.signOut().then(() => navigate('/entrar'));
+      return;
+    }
+    navigate('/perfis');
+  };
   const openTickets = tickets.filter((ticket) => !['resolved', 'closed_not_performed'].includes(ticket.status)).length;
 
   const sidebar = (
@@ -65,8 +74,8 @@ export function AppLayout() {
         ))}
       </nav>
       <div className="sidebar-footer">
-        <div className="mode-pill"><span /> Modo demonstração</div>
-        <p>Dados locais, sem Firebase</p>
+        <div className={`mode-pill mode-${syncStatus}`}><span /> {dataMode === 'firebase' ? 'Firebase conectado' : 'Modo demonstração'}</div>
+        <p title={syncError}>{dataMode === 'firebase' ? syncStatus === 'saving' ? 'Salvando alterações...' : syncStatus === 'loading' ? 'Carregando dados...' : syncStatus === 'signed_out' ? 'Entre para sincronizar' : syncStatus === 'error' ? 'Falha de sincronização' : 'Dados sincronizados' : 'Dados locais, sem Firebase'}</p>
       </div>
     </>
   );
@@ -98,7 +107,7 @@ export function AppLayout() {
             <input aria-label="Buscar" placeholder="Buscar chamados, stands, expositores..." />
           </label>
           <NavLink to="/notificacoes" className={({ isActive }) => `icon-button notification-button${isActive ? ' active' : ''}`} aria-label="Notificações"><Bell /><span /></NavLink>
-          <button className="topbar-profile-button" onClick={() => navigate('/perfis')} aria-label="Trocar perfil"><Avatar initials="AR" color="#5f50d5" /></button>
+          <button className="topbar-profile-button" onClick={openProfile} aria-label={dataMode === 'firebase' ? 'Sair' : 'Trocar perfil'}><Avatar initials="AR" color="#5f50d5" /></button>
         </header>
         <div className={`page-content page-${location.pathname.replace('/', '') || 'home'}`}>
           <Outlet />

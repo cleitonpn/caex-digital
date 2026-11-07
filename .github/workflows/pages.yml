@@ -21,6 +21,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     env:
+      FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
       VITE_DATA_MODE: ${{ vars.VITE_DATA_MODE }}
       VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
       VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
@@ -35,6 +36,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Preparar credenciais do Firebase
+        run: node .github/scripts/prepare-firebase-credentials.mjs
+      - name: Configurar SDK Web do Firebase
+        run: node .github/scripts/configure-firebase-web.mjs
       - run: npm test
       - run: npm run build
       - uses: actions/configure-pages@v5

@@ -26,6 +26,10 @@ html { min-width: 320px; background: #f7f6f4; }
 body { min-width: 320px; min-height: 100vh; margin: 0; }
 .route-loading { min-height: 100vh; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .route-loading span { width: 18px; height: 18px; border: 2px solid #d9d4f4; border-top-color: var(--primary); border-radius: 50%; animation: route-spin .7s linear infinite; }
+.sync-error-page { min-height: 100vh; padding: 30px; display: flex; align-items: center; flex-direction: column; justify-content: center; text-align: center; }
+.sync-error-page h1 { margin-bottom: 8px; font-size: 24px; }
+.sync-error-page p { max-width: 560px; color: var(--muted); }
+.sync-error-page a { min-height: 38px; margin-top: 10px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 10px; color: #fff; background: var(--primary); font-size: 11px; font-weight: 750; }
 @keyframes route-spin { to { transform: rotate(360deg); } }
 button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }

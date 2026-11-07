@@ -1,15 +1,20 @@
 import {
   createContext,
+  useEffect,
   type PropsWithChildren,
   useContext,
   useMemo,
+  useRef,
   useState,
 } from 'react';
+import { getIdTokenResult, onAuthStateChanged } from 'firebase/auth';
 import { initialDemoState, type DemoState } from '../data/demo';
 import { activePhase } from '../domain/schedule';
 import { calculatePriority } from '../domain/priority';
 import { resolveServiceAssignment } from '../domain/routing';
 import { policyForPriority, slaDeadlines } from '../domain/sla';
+import { firebaseIsConfigured, getFirebaseServices } from '../services/firebase';
+import { loadFirestoreState, persistFirestoreChanges, seedFirestoreState, subscribeFirestoreState, type FirebaseScope } from '../services/firestoreState';
 import type {
   Event,
   Exhibitor,
@@ -91,6 +96,9 @@ export interface PersonInput {
 }
 
 interface AppContextValue extends DemoState {
+  dataMode: 'demo' | 'firebase';
+  syncStatus: 'local' | 'signed_out' | 'loading' | 'synced' | 'saving' | 'error';
+  syncError?: string;
   phase: ReturnType<typeof activePhase>;
   createTicket(input: CreateTicketInput): { ticket?: Ticket; error?: string };
   updateTicketStatus(ticketId: string, status: Ticket['status']): void;
@@ -119,11 +127,75 @@ const AppContext = createContext<AppContextValue | null>(null);
 
 export function AppProvider({ children }: PropsWithChildren) {
   const [state, setState] = useState<DemoState>(loadState);
+  const firebaseMode = import.meta.env.VITE_DATA_MODE === 'firebase' && firebaseIsConfigured();
+  const [syncStatus, setSyncStatus] = useState<AppContextValue['syncStatus']>(firebaseMode ? 'loading' : 'local');
+  const [syncError, setSyncError] = useState('');
+  const scopeRef = useRef<FirebaseScope | null>(null);
+  const writeQueueRef = useRef<Promise<unknown>>(Promise.resolve());
+
+  useEffect(() => {
+    if (!firebaseMode) return;
+    const services = getFirebaseServices();
+    if (!services) return;
+    let unsubscribeState: (() => void) | undefined;
+    const unsubscribeAuth = onAuthStateChanged(services.auth, (user) => {
+      unsubscribeState?.();
+      if (!user) {
+        scopeRef.current = null;
+        setSyncStatus('signed_out');
+        return;
+      }
+      setSyncStatus('loading');
+      setSyncError('');
+      void getIdTokenResult(user, true).then(async (token) => {
+        const scope = {
+          tenantId: String(token.claims.tenantId ?? initialDemoState.event.tenantId),
+          eventId: String(token.claims.eventId ?? initialDemoState.event.id),
+        };
+        scopeRef.current = scope;
+        let remote = await loadFirestoreState(services.firestore, scope);
+        const role = String(token.claims.role ?? '');
+        if (!remote && ['platform_admin', 'organizer_admin', 'event_manager'].includes(role)) {
+          await seedFirestoreState(services.firestore, initialDemoState);
+          remote = await loadFirestoreState(services.firestore, scope);
+        }
+        if (!remote) throw new Error('O evento ainda não possui dados no Firestore.');
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+        setState(remote);
+        setSyncStatus('synced');
+        unsubscribeState = subscribeFirestoreState(services.firestore, scope, (next) => {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          setState(next);
+          setSyncStatus('synced');
+          setSyncError('');
+        }, (error) => {
+          setSyncStatus('error');
+          setSyncError(error.message);
+        });
+      }).catch((error: unknown) => {
+        setSyncStatus('error');
+        setSyncError(error instanceof Error ? error.message : 'Não foi possível sincronizar com o Firebase.');
+      });
+    });
+    return () => { unsubscribeAuth(); unsubscribeState?.(); };
+  }, [firebaseMode]);
 
   const persist = (updater: (current: DemoState) => DemoState) => {
     setState((current) => {
       const next = updater(current);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      const services = firebaseMode ? getFirebaseServices() : null;
+      const scope = scopeRef.current;
+      if (services && scope) {
+        setSyncStatus('saving');
+        writeQueueRef.current = writeQueueRef.current
+          .then(() => persistFirestoreChanges(services.firestore, scope, current, next))
+          .then(() => { setSyncStatus('synced'); setSyncError(''); })
+          .catch((error: unknown) => {
+            setSyncStatus('error');
+            setSyncError(error instanceof Error ? error.message : 'Falha ao salvar no Firebase.');
+          });
+      }
       return next;
     });
   };
@@ -133,6 +205,9 @@ export function AppProvider({ children }: PropsWithChildren) {
   const value = useMemo<AppContextValue>(
     () => ({
       ...state,
+      dataMode: firebaseMode ? 'firebase' : 'demo',
+      syncStatus,
+      syncError: syncError || undefined,
       phase,
       createTicket(input) {
         const exhibitor = state.exhibitors.find((item) => item.id === input.exhibitorId);
@@ -415,11 +490,10 @@ export function AppProvider({ children }: PropsWithChildren) {
       },
       resetDemo() {
         const reset = structuredClone(initialDemoState);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(reset));
-        setState(reset);
+        persist(() => reset);
       },
     }),
-    [state, phase],
+    [state, phase, firebaseMode, syncStatus, syncError],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
