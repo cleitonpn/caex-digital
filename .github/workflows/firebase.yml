@@ -44,6 +44,6 @@ jobs:
         continue-on-error: true
         run: npx firebase-tools deploy --only storage --project "$FIREBASE_PROJECT_ID" --non-interactive
       - name: Publicar Functions prontas
-        run: npx firebase-tools deploy --only functions:health,functions:importExhibitors,functions:createTicketNotifications --project "$FIREBASE_PROJECT_ID" --non-interactive --debug
+        run: npx firebase-tools deploy --only functions:health,functions:importExhibitors,functions:createTicketNotifications --project "$FIREBASE_PROJECT_ID" --non-interactive --force
       - name: Validar API publicada
         run: curl --fail-with-body --silent --show-error --max-time 30 "https://southamerica-east1-$FIREBASE_PROJECT_ID.cloudfunctions.net/health"
