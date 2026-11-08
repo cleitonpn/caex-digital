@@ -629,6 +629,24 @@ h1, h2, h3, p { margin-top: 0; }
 .login-demo span { color: var(--primary); font-size: 7px; font-weight: 850; text-transform: uppercase; letter-spacing: .8px; }
 .login-demo p { margin: 5px 0 10px; color: var(--muted); font-size: 8px; }
 .login-demo button { padding: 0; border: 0; color: var(--primary); background: transparent; font-size: 9px; font-weight: 780; }
+.password-reset-backdrop { position: fixed; inset: 0; z-index: 100; padding: 20px; display: flex; align-items: center; justify-content: center; background: rgba(24,18,43,.54); backdrop-filter: blur(7px); }
+.password-reset-dialog { position: relative; width: min(430px,100%); padding: 34px; border-radius: 20px; background: #fff; box-shadow: 0 28px 90px rgba(22,16,42,.32); }
+.password-reset-close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 9px; color: var(--muted); background: #f5f3f7; }
+.password-reset-close svg { width: 17px; }
+.password-reset-icon { width: 46px; height: 46px; display: inline-flex; align-items: center; justify-content: center; border-radius: 14px; color: var(--primary); background: var(--primary-soft); }
+.password-reset-icon.success { color: #19865f; background: #e8f7f0; }
+.password-reset-icon svg { width: 22px; }
+.password-reset-dialog h2 { margin: 18px 0 7px; font-size: 24px; letter-spacing: -.6px; }
+.password-reset-dialog > p { margin: 0 0 22px; color: var(--muted); font-size: 10px; line-height: 1.55; }
+.password-reset-dialog > label { margin-bottom: 16px; display: flex; flex-direction: column; gap: 7px; }
+.password-reset-dialog > label > span { font-size: 8px; font-weight: 760; }
+.password-reset-dialog > label > div { height: 46px; padding: 0 11px; display: flex; align-items: center; gap: 8px; border: 1px solid #dedbe2; border-radius: 10px; }
+.password-reset-dialog > label > div:focus-within { border-color: #9589e5; box-shadow: 0 0 0 3px #f0edff; }
+.password-reset-dialog > label svg { width: 16px; color: #918c97; }
+.password-reset-dialog > label input { min-width: 0; flex: 1; border: 0; outline: 0; font-size: 10px; }
+.password-reset-dialog .login-feedback { margin: 0 0 16px; }
+.password-reset-dialog .spin { animation: password-reset-spin .8s linear infinite; }
+@keyframes password-reset-spin { to { transform: rotate(360deg); } }
 
 .profile-selector-page { min-height: 100vh; background: #f7f6f4; }
 .profile-selector-top { height: 72px; padding: 0 max(24px,calc((100% - 1240px)/2)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(255,255,255,.92); backdrop-filter: blur(12px); }
