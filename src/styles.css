@@ -960,6 +960,36 @@ h1, h2, h3, p { margin-top: 0; }
 .platform-support > svg { width: 23px; color: var(--role-accent); }
 .platform-support strong { display: block; margin-top: 8px; font-size: 10px; }
 .platform-support p { color: var(--muted); font-size: 8px; line-height: 1.4; }
+.platform-sync-message { margin: 0 0 14px; }
+.platform-tenant-modal { width: min(700px,100%); }
+.platform-color-field { height: 40px; padding: 0 10px; display: flex; align-items: center; gap: 9px; border: 1px solid #dcd9e1; border-radius: 9px; }
+.platform-color-field input { width: 28px; height: 28px; padding: 0; border: 0; background: transparent; }
+.platform-color-field b { color: var(--muted); font-size: 8px; text-transform: uppercase; }
+.platform-contracts-modal, .platform-operations-modal { width: min(860px,100%); }
+.platform-contract-list, .platform-operation-list { max-height: 60vh; padding: 12px 18px; overflow-y: auto; }
+.platform-contract-list article { min-height: 66px; padding: 9px 0; display: grid; grid-template-columns: 42px minmax(150px,1fr) minmax(120px,.7fr) auto auto; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+.platform-contract-list article:last-child, .platform-operation-list article:last-child { border-bottom: 0; }
+.platform-contract-list article > div, .platform-contract-list article > span:nth-child(3) { min-width: 0; display: flex; flex-direction: column; }
+.platform-contract-list strong, .platform-contract-list b { font-size: 9px; }
+.platform-contract-list small { margin-top: 2px; overflow: hidden; color: var(--muted); font-size: 7px; text-overflow: ellipsis; white-space: nowrap; }
+.platform-contract-list i { font-style: normal; white-space: nowrap; }
+.platform-operation-list article { min-height: 64px; display: grid; grid-template-columns: 30px minmax(0,1fr) auto auto; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+.platform-operation-list article > span { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; color: var(--primary); background: var(--primary-soft); font-size: 8px; font-weight: 850; }
+.platform-operation-list article > div { min-width: 0; display: flex; flex-direction: column; }
+.platform-operation-list strong { font-size: 9px; }
+.platform-operation-list small { margin-top: 3px; color: var(--muted); font-size: 7px; }
+.platform-operation-list article > b { color: var(--warning); font-size: 7px; }
+.platform-operation-list > p { padding: 30px; color: var(--muted); text-align: center; }
+
+@media (max-width: 620px) {
+  .platform-contract-list article { grid-template-columns: 42px minmax(0,1fr) auto; }
+  .platform-contract-list article > span:nth-child(3) { grid-column: 2; }
+  .platform-contract-list article > i { grid-column: 3; grid-row: 1; }
+  .platform-contract-list article > button { grid-column: 3; grid-row: 2; }
+  .platform-operation-list article { grid-template-columns: 30px minmax(0,1fr) auto; padding: 9px 0; }
+  .platform-operation-list article > b { grid-column: 2; }
+  .platform-operation-list article > button { grid-column: 3; grid-row: 1/3; }
+}
 
 .portal-shell { --event-primary: #3726b0; min-height: 100vh; background: #f8f7f5; }
 .portal-header { position: sticky; top: 0; z-index: 10; height: 70px; padding: 0 max(20px,calc((100% - 640px)/2)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(255,255,255,.94); backdrop-filter: blur(14px); }

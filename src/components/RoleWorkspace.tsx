@@ -2,17 +2,22 @@ import {
   ArrowLeftRight,
   BarChart3,
   Bell,
+  Building2,
   CalendarClock,
   ClipboardList,
+  CloudCog,
   Home,
   LogOut,
   Menu,
+  ServerCog,
   UsersRound,
   Wrench,
 } from 'lucide-react';
+import { signOut } from 'firebase/auth';
 import { type ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppContext';
+import { getFirebaseServices } from '../services/firebase';
 import { Avatar } from './ui';
 
 const phaseLabels = { setup: 'Montagem', event: 'Evento', teardown: 'Desmontagem' };
@@ -22,12 +27,14 @@ export function RoleWorkspace({
   organization,
   personId,
   accent = '#4431bd',
+  navigationVariant = 'default',
   children,
 }: {
   roleLabel: string;
   organization: string;
   personId: string;
   accent?: string;
+  navigationVariant?: 'default' | 'platform';
   children: ReactNode;
 }) {
   const app = useApp();
@@ -40,22 +47,38 @@ export function RoleWorkspace({
     setMobileMenu(false);
   };
 
-  const navigation = <>
+  const exit = async () => {
+    const services = getFirebaseServices();
+    if (app.dataMode === 'firebase' && services) await signOut(services.auth);
+    navigate('/entrar', { replace: true });
+  };
+
+  const openAccount = () => navigate(app.dataMode === 'firebase' ? '/usuarios' : '/perfis');
+
+  const defaultNavigation = <>
     <button className="active" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><Home /><span>Início</span></button>
     <button onClick={() => scrollTo('.role-queue')}><ClipboardList /><span>Chamados</span></button>
     <button onClick={() => scrollTo('.role-agenda')}><CalendarClock /><span>Agenda</span></button>
     <button onClick={() => scrollTo('.role-team')}><UsersRound /><span>Equipe</span></button>
     <button onClick={() => navigate('/relatorios')}><BarChart3 /><span>Indicadores</span></button>
   </>;
+  const platformNavigation = <>
+    <button className="active" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><Home /><span>Início</span></button>
+    <button onClick={() => scrollTo('.role-queue')}><Building2 /><span>Organizadoras</span></button>
+    <button onClick={() => scrollTo('.role-agenda')}><CloudCog /><span>Implantação</span></button>
+    <button onClick={() => scrollTo('.platform-health')}><ServerCog /><span>Serviços</span></button>
+    <button onClick={() => navigate('/relatorios')}><BarChart3 /><span>Indicadores</span></button>
+  </>;
+  const navigation = navigationVariant === 'platform' ? platformNavigation : defaultNavigation;
 
   return <div className="role-workspace" style={{ '--role-accent': accent } as React.CSSProperties}>
     <aside className="role-sidebar">
-      <button className="role-brand" onClick={() => navigate('/perfis')}><span><Wrench /></span><strong>CAEXOne</strong></button>
+      <button className="role-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><span><Wrench /></span><strong>CAEXOne</strong></button>
       <nav>{navigation}</nav>
-      <div className="role-sidebar-footer"><button onClick={() => navigate('/perfis')}><ArrowLeftRight /> Trocar perfil</button><button onClick={() => navigate('/entrar')}><LogOut /> Sair</button></div>
+      <div className="role-sidebar-footer"><button onClick={openAccount}><ArrowLeftRight /> {app.dataMode === 'firebase' ? 'Minha conta' : 'Trocar perfil'}</button><button onClick={() => void exit()}><LogOut /> Sair</button></div>
     </aside>
 
-    {mobileMenu && <div className="role-mobile-menu" onClick={() => setMobileMenu(false)}><aside onClick={(event) => event.stopPropagation()}><button className="role-brand" onClick={() => navigate('/perfis')}><span><Wrench /></span><strong>CAEXOne</strong></button><nav>{navigation}</nav><div className="role-sidebar-footer"><button onClick={() => navigate('/perfis')}><ArrowLeftRight /> Trocar perfil</button></div></aside></div>}
+    {mobileMenu && <div className="role-mobile-menu" onClick={() => setMobileMenu(false)}><aside onClick={(event) => event.stopPropagation()}><button className="role-brand" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenu(false); }}><span><Wrench /></span><strong>CAEXOne</strong></button><nav>{navigation}</nav><div className="role-sidebar-footer"><button onClick={openAccount}><ArrowLeftRight /> {app.dataMode === 'firebase' ? 'Minha conta' : 'Trocar perfil'}</button><button onClick={() => void exit()}><LogOut /> Sair</button></div></aside></div>}
 
     <main className="role-main">
       <header className="role-topbar">
@@ -65,7 +88,7 @@ export function RoleWorkspace({
         <span className="role-label">{roleLabel}</span>
         <div className="role-topbar-spacer" />
         <button className="icon-button notification-button" onClick={() => navigate('/notificacoes')}><Bell /><span /></button>
-        <button className="role-profile" onClick={() => navigate('/perfis')}><Avatar initials={person.initials} color={person.avatarColor} /><span><strong>{person.name}</strong><small>{roleLabel}</small></span></button>
+        <button className="role-profile" onClick={openAccount}><Avatar initials={person.initials} color={person.avatarColor} /><span><strong>{person.name}</strong><small>{roleLabel}</small></span></button>
       </header>
       <div className="role-page-content">{children}</div>
       <nav className="role-bottom-nav">{navigation}</nav>

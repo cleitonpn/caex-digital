@@ -3,6 +3,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
+    function isPlatformAdmin() { return signedIn() && request.auth.token.role == 'platform_admin'; }
     function memberPath(tenantId) {
       return /databases/$(database)/documents/tenants/$(tenantId)/members/$(request.auth.uid);
     }
@@ -12,7 +13,7 @@ service cloud.firestore {
     function member(tenantId) { return get(memberPath(tenantId)).data; }
     function hasRole(tenantId, roles) { return isMember(tenantId) && member(tenantId).role in roles; }
     function isAdmin(tenantId) {
-      return hasRole(tenantId, ['platform_admin', 'organizer_admin', 'event_manager']);
+      return isPlatformAdmin() || hasRole(tenantId, ['platform_admin', 'organizer_admin', 'event_manager']);
     }
     function isOrganizerOperation(tenantId) {
       return hasRole(tenantId, ['platform_admin', 'organizer_admin', 'event_manager', 'organizer_producer', 'organizer_service']);
@@ -98,6 +99,10 @@ service cloud.firestore {
     match /publicInvites/{inviteId} {
       allow read: if true;
       allow write: if false;
+    }
+
+    match /platformTenants/{tenantId} {
+      allow read, write: if isPlatformAdmin();
     }
 
     match /{document=**} {
