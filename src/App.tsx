@@ -16,6 +16,7 @@ const UsersPage = lazy(async () => ({ default: (await import('./pages/UsersPage'
 const NotificationsPage = lazy(async () => ({ default: (await import('./pages/NotificationsPage')).NotificationsPage }));
 const PortalPage = lazy(async () => ({ default: (await import('./pages/PortalPage')).PortalPage }));
 const LoginPage = lazy(async () => ({ default: (await import('./pages/LoginPage')).LoginPage }));
+const EmailActionPage = lazy(async () => ({ default: (await import('./pages/EmailActionPage')).EmailActionPage }));
 const RoleSelectorPage = lazy(async () => ({ default: (await import('./pages/RoleSelectorPage')).RoleSelectorPage }));
 const ManagerPage = lazy(async () => ({ default: (await import('./pages/roles/ManagerPage')).ManagerPage }));
 const OrganizerProducerPage = lazy(async () => ({ default: (await import('./pages/roles/OrganizerProducerPage')).OrganizerProducerPage }));
@@ -35,6 +36,8 @@ function Protected({ children }: { children: React.ReactNode }) {
 }
 
 export function App() {
+  const emailActionMode = new URLSearchParams(window.location.search).get('mode');
+  if (emailActionMode) return <Suspense fallback={<div className="route-loading"><span /> Validando link...</div>}><EmailActionPage /></Suspense>;
   return (
     <Suspense fallback={<div className="route-loading"><span /> Carregando operação...</div>}>
       <Routes>

@@ -50,7 +50,10 @@ export function LoginPage() {
     setMessage('');
     try {
       services.auth.languageCode = language === 'PT' ? 'pt-BR' : language === 'ES' ? 'es' : 'en';
-      await sendPasswordResetEmail(services.auth, email.trim());
+      await sendPasswordResetEmail(services.auth, email.trim(), {
+        url: `${window.location.origin}${window.location.pathname}#/entrar`,
+        handleCodeInApp: false,
+      });
       setMessage(`Link enviado para ${email.trim()}. Confira também a caixa de spam.`);
     } catch (resetError) {
       const code = resetError && typeof resetError === 'object' && 'code' in resetError ? String(resetError.code) : '';

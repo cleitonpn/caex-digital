@@ -54,6 +54,29 @@ try {
       authConfig = await updateEmailProvider();
     }
     if (!authConfig.ok) console.warn(`Não foi possível ativar login por e-mail automaticamente: HTTP ${authConfig.status}.`);
+
+    const actionUrl = process.env.FIREBASE_AUTH_ACTION_URL?.trim() || 'https://cleitonpn.github.io/caex-digital/';
+    const currentConfigResponse = await fetch(`https://identitytoolkit.googleapis.com/admin/v2/projects/${projectId}/config`, { headers });
+    if (currentConfigResponse.ok) {
+      const currentConfig = await currentConfigResponse.json();
+      const actionHost = new URL(actionUrl).hostname;
+      const authorizedDomains = [...new Set([...(currentConfig.authorizedDomains ?? []), actionHost])];
+      const emailActionConfig = await fetch(`https://identitytoolkit.googleapis.com/admin/v2/projects/${projectId}/config?updateMask=authorizedDomains,notification.sendEmail.callbackUri`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({
+          authorizedDomains,
+          notification: { sendEmail: { callbackUri: actionUrl } },
+        }),
+      });
+      if (!emailActionConfig.ok) {
+        console.warn(`Não foi possível configurar a página de ações de e-mail: HTTP ${emailActionConfig.status}.`);
+      } else {
+        console.log(`Página de ações de e-mail configurada: ${actionUrl}`);
+      }
+    } else {
+      console.warn(`Não foi possível consultar a configuração do Firebase Auth: HTTP ${currentConfigResponse.status}.`);
+    }
   }
   const users = (await getAuth().listUsers(1000)).users;
   const commitEmail = execFileSync('git', ['log', '-1', '--format=%ae'], { encoding: 'utf8' }).trim();
@@ -79,6 +102,11 @@ try {
       updatedAt: new Date().toISOString(),
     }, { merge: true });
     console.log(`Administrador inicial vinculado: ${bootstrapUser.email ?? bootstrapUser.uid}.`);
+    if (bootstrapUser.email) {
+      const actionUrl = process.env.FIREBASE_AUTH_ACTION_URL?.trim() || 'https://cleitonpn.github.io/caex-digital/';
+      const generatedLink = new URL(await getAuth().generatePasswordResetLink(bootstrapUser.email, { url: `${actionUrl}#/entrar` }));
+      console.log(`Link de recuperação validado: ${generatedLink.origin}${generatedLink.pathname} (modo ${generatedLink.searchParams.get('mode') ?? 'ausente'}).`);
+    }
   } else if (users.length === 0) {
     console.log('Nenhum usuário no Firebase Auth; crie o primeiro usuário para que ele seja vinculado no próximo deploy.');
   } else {

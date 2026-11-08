@@ -47,6 +47,7 @@ jobs:
       - name: Criar carga inicial preservando dados existentes
         env:
           FIREBASE_BOOTSTRAP_ADMIN_EMAIL: ${{ vars.FIREBASE_BOOTSTRAP_ADMIN_EMAIL }}
+          FIREBASE_AUTH_ACTION_URL: ${{ vars.FIREBASE_AUTH_ACTION_URL }}
         run: node functions/scripts/seed-firestore.mjs
       - name: Publicar Functions prontas
         run: npx firebase-tools deploy --only functions:health,functions:importExhibitors,functions:createTicketNotifications --project "$FIREBASE_PROJECT_ID" --non-interactive --force

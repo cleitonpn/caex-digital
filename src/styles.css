@@ -635,6 +635,7 @@ h1, h2, h3, p { margin-top: 0; }
 .password-reset-close svg { width: 17px; }
 .password-reset-icon { width: 46px; height: 46px; display: inline-flex; align-items: center; justify-content: center; border-radius: 14px; color: var(--primary); background: var(--primary-soft); }
 .password-reset-icon.success { color: #19865f; background: #e8f7f0; }
+.password-reset-icon.error { color: #b43b35; background: #fff0ef; }
 .password-reset-icon svg { width: 22px; }
 .password-reset-dialog h2 { margin: 18px 0 7px; font-size: 24px; letter-spacing: -.6px; }
 .password-reset-dialog > p { margin: 0 0 22px; color: var(--muted); font-size: 10px; line-height: 1.55; }
@@ -647,6 +648,31 @@ h1, h2, h3, p { margin-top: 0; }
 .password-reset-dialog .login-feedback { margin: 0 0 16px; }
 .password-reset-dialog .spin { animation: password-reset-spin .8s linear infinite; }
 @keyframes password-reset-spin { to { transform: rotate(360deg); } }
+.email-action-page { min-height: 100vh; padding: 30px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 80% 15%,#725ed7 0,transparent 27%),linear-gradient(145deg,#17112e,#3824a8); }
+.email-action-card { width: min(480px,100%); padding: 34px; border-radius: 22px; background: #fff; box-shadow: 0 30px 100px rgba(13,8,35,.4); }
+.email-action-brand { margin-bottom: 32px; display: flex; align-items: center; gap: 9px; font-size: 17px; }
+.email-action-brand > span { width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; border-radius: 11px; color: #fff; background: linear-gradient(145deg,#6552e5,#3824a8); }
+.email-action-brand svg { width: 18px; }
+.email-action-card h1 { margin: 18px 0 8px; font-size: 26px; letter-spacing: -.7px; }
+.email-action-card p { margin: 0 0 24px; color: var(--muted); font-size: 10px; line-height: 1.55; }
+.email-action-card p strong { color: var(--text); }
+.email-action-card form > label { margin: 14px 0; display: flex; flex-direction: column; gap: 7px; }
+.email-action-card form > label > span { font-size: 8px; font-weight: 760; }
+.email-action-card form > label > div { height: 46px; padding: 0 11px; display: flex; align-items: center; gap: 8px; border: 1px solid #dedbe2; border-radius: 10px; }
+.email-action-card form > label > div:focus-within { border-color: #9589e5; box-shadow: 0 0 0 3px #f0edff; }
+.email-action-card form > label svg { width: 16px; color: #918c97; }
+.email-action-card form > label input { min-width: 0; flex: 1; border: 0; outline: 0; font-size: 10px; }
+.email-action-card form > label button { width: 28px; height: 28px; padding: 0; border: 0; color: var(--muted); background: transparent; }
+.email-action-card .login-feedback { margin: 0 0 16px; }
+.email-action-card .login-submit { text-decoration: none; }
+.email-action-card .spin { animation: password-reset-spin .8s linear infinite; }
+.email-action-state { display: flex; align-items: flex-start; flex-direction: column; }
+.email-action-state .login-submit { margin-top: 2px; }
+
+@media (max-width: 620px) {
+  .email-action-page { padding: 16px; }
+  .email-action-card { padding: 26px 22px; border-radius: 18px; }
+}
 
 .profile-selector-page { min-height: 100vh; background: #f7f6f4; }
 .profile-selector-top { height: 72px; padding: 0 max(24px,calc((100% - 1240px)/2)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(255,255,255,.92); backdrop-filter: blur(12px); }
