@@ -68,13 +68,8 @@ try {
       });
       if (!authorizedDomainsConfig.ok) throw new Error(`Não foi possível autorizar ${actionHost}: HTTP ${authorizedDomainsConfig.status} ${await authorizedDomainsConfig.text()}`);
 
-      const emailActionConfig = await fetch(`https://identitytoolkit.googleapis.com/admin/v2/projects/${projectId}/config?updateMask=notification.sendEmail.callbackUri`, {
-        method: 'PATCH',
-        headers,
-        body: JSON.stringify({ notification: { sendEmail: { callbackUri: actionUrl } } }),
-      });
-      if (!emailActionConfig.ok) throw new Error(`Não foi possível configurar a página de ações de e-mail: HTTP ${emailActionConfig.status} ${await emailActionConfig.text()}`);
-      console.log(`Página de ações de e-mail configurada: ${actionUrl}`);
+      console.log(`Domínio de ações de e-mail autorizado: ${actionHost}.`);
+      console.log(`Manipulador de e-mail atual: ${currentConfig.notification?.sendEmail?.callbackUri ?? 'padrão do Firebase'}.`);
     } else {
       throw new Error(`Não foi possível consultar a configuração do Firebase Auth: HTTP ${currentConfigResponse.status} ${await currentConfigResponse.text()}`);
     }
