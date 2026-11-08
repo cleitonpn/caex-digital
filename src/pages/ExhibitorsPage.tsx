@@ -15,16 +15,21 @@ export function ExhibitorsPage() {
   const [editing, setEditing] = useState(false);
   const [ticketOpen, setTicketOpen] = useState(false);
   const [matrixOpen, setMatrixOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [tierFilter, setTierFilter] = useState('all');
+  const [pavilionFilter, setPavilionFilter] = useState('all');
   const exhibitors = useMemo(() => {
     const term = search.toLowerCase().trim();
-    return app.exhibitors.filter((item) => !term || [item.name, item.stand, item.pavilion, item.contactName].some((value) => value.toLowerCase().includes(term)));
-  }, [app.exhibitors, search]);
+    return app.exhibitors.filter((item) => (!term || [item.name, item.stand, item.pavilion, item.contactName].some((value) => value.toLowerCase().includes(term))) && (tierFilter === 'all' || item.internalTier === tierFilter) && (pavilionFilter === 'all' || item.pavilion === pavilionFilter));
+  }, [app.exhibitors, search, tierFilter, pavilionFilter]);
+  const pavilions = [...new Set(app.exhibitors.map((item) => item.pavilion))];
   const selected = selectedId ? app.exhibitors.find((item) => item.id === selectedId) ?? null : null;
 
   return (
     <>
       <PageHeader title="Expositores" description="Stands, documentos, criticidade interna e responsabilidades em um só lugar." actions={<button className="button button-primary" onClick={() => { setEditing(false); setFormOpen(true); }}><Store size={17} /> Cadastrar expositor</button>} />
-      <section className="toolbar panel"><label className="search-field"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar expositor, stand ou responsável" /></label><button className="button button-ghost"><SlidersHorizontal size={16} /> Filtros</button><span className="result-count">{exhibitors.length} expositores</span></section>
+      <section className="toolbar panel"><label className="search-field"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar expositor, stand ou responsável" /></label><button className={`button button-ghost ${filtersOpen ? 'active' : ''}`} onClick={() => setFiltersOpen((current) => !current)}><SlidersHorizontal size={16} /> Filtros</button><span className="result-count">{exhibitors.length} expositores</span></section>
+      {filtersOpen && <section className="panel exhibitor-filter-panel"><label className="form-field"><span>Classificação interna</span><select value={tierFilter} onChange={(event) => setTierFilter(event.target.value)}><option value="all">Todas</option>{['AAA', 'AA', 'A', 'B', 'C'].map((tier) => <option key={tier}>{tier}</option>)}</select></label><label className="form-field"><span>Pavilhão</span><select value={pavilionFilter} onChange={(event) => setPavilionFilter(event.target.value)}><option value="all">Todos</option>{pavilions.map((pavilion) => <option key={pavilion}>{pavilion}</option>)}</select></label><button className="button button-ghost" onClick={() => { setSearch(''); setTierFilter('all'); setPavilionFilter('all'); }}>Limpar filtros</button></section>}
       <section className="exhibitor-grid">
         {exhibitors.map((exhibitor) => {
           const assignments = app.assignments.filter((item) => item.exhibitorId === exhibitor.id);

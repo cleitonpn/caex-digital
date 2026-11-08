@@ -10,7 +10,8 @@ import {
   Siren,
   TimerReset,
 } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Area,
   AreaChart,
@@ -30,7 +31,10 @@ import { Avatar, MetricCard, PageHeader, PriorityBadge, SlaPill } from '../compo
 const priorityRank = { critical: 4, high: 3, medium: 2, low: 1 };
 
 export function WarRoomPage() {
+  const navigate = useNavigate();
   const { tickets, exhibitors, companies, people, now, updateTicketStatus } = useApp();
+  const [queueFilter, setQueueFilter] = useState<'all' | 'critical' | 'late'>('all');
+  const [showAllActivities, setShowAllActivities] = useState(false);
   const openTickets = tickets.filter(
     (ticket) => !['resolved', 'closed_not_performed'].includes(ticket.status),
   );
@@ -47,6 +51,7 @@ export function WarRoomPage() {
   const overdue = openTickets.filter(
     (ticket) => new Date(ticket.resolveDueAt).getTime() < new Date(now).getTime(),
   );
+  const visibleTickets = sortedTickets.filter((ticket) => queueFilter === 'all' || (queueFilter === 'critical' ? ticket.priority === 'critical' : new Date(ticket.resolveDueAt).getTime() < new Date(now).getTime()));
 
   const categoryData = useMemo(() => {
     const count = new Map<string, number>();
@@ -107,7 +112,7 @@ export function WarRoomPage() {
       <PageHeader
         title="Sala de Guerra"
         description="Visão operacional em tempo real para decisões rápidas."
-        actions={<button className="button button-ghost"><Activity size={17} /> Ver relatório executivo</button>}
+        actions={<button className="button button-ghost" onClick={() => navigate('/relatorios')}><Activity size={17} /> Ver relatório executivo</button>}
       />
 
       <section className="metrics-grid">
@@ -127,13 +132,13 @@ export function WarRoomPage() {
         <div className="panel queue-panel">
           <div className="panel-header">
             <div><span className="panel-icon"><Layers3 /></span><div><h2>Fila inteligente</h2><p>Ordenada por risco, impacto, fase e SLA</p></div></div>
-            <button className="select-button">Todos os chamados <span>⌄</span></button>
+            <label className="select-button"><select value={queueFilter} onChange={(event) => setQueueFilter(event.target.value as typeof queueFilter)}><option value="all">Todos os chamados</option><option value="critical">Somente críticos</option><option value="late">Fora do SLA</option></select><span>⌄</span></label>
           </div>
           <div className="queue-table-wrap">
             <table className="data-table queue-table">
               <thead><tr><th>#</th><th>Chamado</th><th>Prioridade</th><th>Categoria</th><th>SLA</th><th>Fornecedor</th><th /></tr></thead>
               <tbody>
-                {sortedTickets.slice(0, 6).map((ticket, index) => {
+                {visibleTickets.slice(0, 6).map((ticket, index) => {
                   const exhibitor = exhibitors.find((item) => item.id === ticket.exhibitorId)!;
                   const provider = companies.find((item) => item.id === ticket.providerId);
                   return (
@@ -234,9 +239,9 @@ export function WarRoomPage() {
       </section>
 
       <section className="panel activity-panel">
-        <div className="panel-header compact"><div><span className="panel-icon"><Activity /></span><div><h2>Atividades recentes</h2><p>Principais movimentações da operação</p></div></div><button className="text-button">Ver todas <ArrowRight /></button></div>
+        <div className="panel-header compact"><div><span className="panel-icon"><Activity /></span><div><h2>Atividades recentes</h2><p>Principais movimentações da operação</p></div></div><button className="text-button" onClick={() => setShowAllActivities((current) => !current)}>{showAllActivities ? 'Mostrar recentes' : 'Ver todas'} <ArrowRight /></button></div>
         <div className="activity-list">
-          {tickets.flatMap((ticket) => ticket.timeline.map((entry) => ({ ...entry, ticket }))).sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime()).slice(0, 4).map((entry) => {
+          {tickets.flatMap((ticket) => ticket.timeline.map((entry) => ({ ...entry, ticket }))).sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime()).slice(0, showAllActivities ? 30 : 4).map((entry) => {
             const person = people.find((item) => item.name === entry.actorName);
             return <div className="activity-item" key={entry.id}><Avatar initials={person?.initials ?? entry.actorName.slice(0, 2).toUpperCase()} color={person?.avatarColor} /><div><strong>{entry.actorName}</strong><span>{entry.action} · {entry.ticket.id}</span></div><small>{formatRelativeTime(entry.at, now)}</small></div>;
           })}
