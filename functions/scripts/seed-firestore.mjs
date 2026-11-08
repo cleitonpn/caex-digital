@@ -61,21 +61,22 @@ try {
       const currentConfig = await currentConfigResponse.json();
       const actionHost = new URL(actionUrl).hostname;
       const authorizedDomains = [...new Set([...(currentConfig.authorizedDomains ?? []), actionHost])];
-      const emailActionConfig = await fetch(`https://identitytoolkit.googleapis.com/admin/v2/projects/${projectId}/config?updateMask=authorizedDomains,notification.sendEmail.callbackUri`, {
+      const authorizedDomainsConfig = await fetch(`https://identitytoolkit.googleapis.com/admin/v2/projects/${projectId}/config?updateMask=authorizedDomains`, {
         method: 'PATCH',
         headers,
-        body: JSON.stringify({
-          authorizedDomains,
-          notification: { sendEmail: { callbackUri: actionUrl } },
-        }),
+        body: JSON.stringify({ authorizedDomains }),
       });
-      if (!emailActionConfig.ok) {
-        console.warn(`Não foi possível configurar a página de ações de e-mail: HTTP ${emailActionConfig.status}.`);
-      } else {
-        console.log(`Página de ações de e-mail configurada: ${actionUrl}`);
-      }
+      if (!authorizedDomainsConfig.ok) throw new Error(`Não foi possível autorizar ${actionHost}: HTTP ${authorizedDomainsConfig.status} ${await authorizedDomainsConfig.text()}`);
+
+      const emailActionConfig = await fetch(`https://identitytoolkit.googleapis.com/admin/v2/projects/${projectId}/config?updateMask=notification.sendEmail.callbackUri`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ notification: { sendEmail: { callbackUri: actionUrl } } }),
+      });
+      if (!emailActionConfig.ok) throw new Error(`Não foi possível configurar a página de ações de e-mail: HTTP ${emailActionConfig.status} ${await emailActionConfig.text()}`);
+      console.log(`Página de ações de e-mail configurada: ${actionUrl}`);
     } else {
-      console.warn(`Não foi possível consultar a configuração do Firebase Auth: HTTP ${currentConfigResponse.status}.`);
+      throw new Error(`Não foi possível consultar a configuração do Firebase Auth: HTTP ${currentConfigResponse.status} ${await currentConfigResponse.text()}`);
     }
   }
   const users = (await getAuth().listUsers(1000)).users;
@@ -113,5 +114,6 @@ try {
     console.log('Há múltiplos usuários no Auth. Defina FIREBASE_BOOTSTRAP_ADMIN_EMAIL para escolher o administrador inicial.');
   }
 } catch (error) {
-  console.warn(`Carga de dados concluída, mas o vínculo do administrador ficou pendente: ${error instanceof Error ? error.message : error}`);
+  console.error(`A configuração do Firebase Auth falhou: ${error instanceof Error ? error.message : error}`);
+  process.exitCode = 1;
 }
